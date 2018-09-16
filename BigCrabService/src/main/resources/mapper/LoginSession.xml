@@ -72,24 +72,11 @@
     <sql id="findLoginSessionsParams">
     </sql>
     <select id="getList" parameterType="java.util.HashMap" resultMap="loginSessionResultMapper">
-        SELECT * FROM (
-            SELECT
-            <include refid="allFields" />,
-            ROW_NUMBER()
-            <choose>
-                <when test="orderBy != null">
-                    OVER(Order by ${orderBy} )
-                </when>
-                <otherwise>
-                    OVER(Order by created_at )
-                </otherwise>
-            </choose>
-            AS RowId
-            FROM t_login_session
-            WHERE 1=1
-            <include refid="findLoginSessionsParams"/>
-        ) A
-        WHERE RowId BETWEEN #{pageStart} AND #{pageEnd}
+        SELECT
+        <include refid="allFields" />
+        FROM t_login_session
+        WHERE 1=1
+        <include refid="findLoginSessionsParams"/>
     </select>
 
     <delete id="purge">

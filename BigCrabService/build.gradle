@@ -67,6 +67,9 @@ dependencies {
 
     compile 'org.glassfish.jersey.media:jersey-media-multipart:2.25.1'
 
+    // https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
+    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.17'
+
     /**
      *  see info to https://github.com/victorwang0526/swagger-doclet
      */

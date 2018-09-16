@@ -35,8 +35,8 @@ public abstract class QueryBuilder
 		return add("orderBy", orderBy);
 	}
 
-	public <T extends QueryBuilder> T pagination(Integer limit, Integer offset)
+	public <T extends QueryBuilder> T pagination(Integer page, Integer size)
 	{
-		return add("limit", limit).add("offset", offset);
+		return add("limit", size).add("offset", (page-1)*size);
 	}
 }

@@ -77,24 +77,11 @@
     <sql id="findUsersParams">
     </sql>
     <select id="getList" parameterType="java.util.HashMap" resultMap="userResultMapper">
-        SELECT * FROM (
-            SELECT
-            <include refid="allFields" />,
-            ROW_NUMBER()
-            <choose>
-                <when test="orderBy != null">
-                    OVER(Order by ${orderBy} )
-                </when>
-                <otherwise>
-                    OVER(Order by created_at )
-                </otherwise>
-            </choose>
-            AS RowId
-            FROM t_user
-            WHERE 1=1
-            <include refid="findUsersParams"/>
-        ) A
-        WHERE RowId BETWEEN #{pageStart} AND #{pageEnd}
+        SELECT
+        <include refid="allFields" />
+        FROM t_user
+        WHERE 1=1
+        <include refid="findUsersParams"/>
     </select>
 
     <delete id="purge">

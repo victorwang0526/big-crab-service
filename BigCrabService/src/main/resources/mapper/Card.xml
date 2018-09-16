@@ -5,6 +5,7 @@
         <id column="id" property="id" jdbcType="VARCHAR" />
         <result column="card_number" property="cardNumber" jdbcType="VARCHAR" />
         <result column="password" property="password" jdbcType="VARCHAR" />
+        <result column="card_type" property="cardType" jdbcType="VARCHAR" />
         <result column="status" property="status" jdbcType="VARCHAR" />
         <result column="description" property="description" jdbcType="VARCHAR" />
         <result column="last_error_at" property="lastErrorAt" jdbcType="TIMESTAMP" />
@@ -18,6 +19,7 @@
         id,
         card_number,
         password,
+        card_type,
         status,
         description,
         last_error_at,
@@ -54,6 +56,7 @@
         id,
         card_number,
         password,
+        card_type,
         status,
         description,
         last_error_at,
@@ -67,6 +70,7 @@
         #{id,jdbcType=VARCHAR},
         #{cardNumber,jdbcType=VARCHAR},
         #{password,jdbcType=VARCHAR},
+        #{cardType,jdbcType=VARCHAR},
         #{status,jdbcType=VARCHAR},
         #{description,jdbcType=VARCHAR},
         #{lastErrorAt,jdbcType=TIMESTAMP},
@@ -83,6 +87,7 @@
         SET 
         card_number = #{cardNumber,jdbcType=VARCHAR},
         password = #{password,jdbcType=VARCHAR},
+        card_type = #{cardType,jdbcType=VARCHAR},
         status = #{status,jdbcType=VARCHAR},
         description = #{description,jdbcType=VARCHAR},
         last_error_at = #{lastErrorAt,jdbcType=TIMESTAMP},
@@ -97,24 +102,22 @@
     <sql id="findCardsParams">
     </sql>
     <select id="getList" parameterType="java.util.HashMap" resultMap="cardResultMapper">
-        SELECT * FROM (
-            SELECT
-            <include refid="allFields" />,
-            ROW_NUMBER()
-            <choose>
-                <when test="orderBy != null">
-                    OVER(Order by ${orderBy} )
-                </when>
-                <otherwise>
-                    OVER(Order by created_at )
-                </otherwise>
-            </choose>
-            AS RowId
-            FROM t_card
-            WHERE 1=1
-            <include refid="findCardsParams"/>
-        ) A
-        WHERE RowId BETWEEN #{pageStart} AND #{pageEnd}
+        SELECT
+        <include refid="allFields" />
+        FROM t_card
+        WHERE 1=1
+        <include refid="findCardsParams"/>
+        <choose>
+            <when test="orderBy != null">
+                ORDER BY ${orderBy}
+            </when>
+            <otherwise>
+                ORDER BY card_number
+            </otherwise>
+        </choose>
+        <if test="limit != null and offset != null">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
     </select>
 
     <delete id="purge">
@@ -125,4 +128,9 @@
         DELETE FROM t_card
         WHERE id = #{id}
     </delete>
+
+    <select id="getByCardNumber" parameterType="java.util.HashMap" resultMap="cardResultMapper">
+        select * from t_card
+        where card_number = #{cardNumber}
+    </select>
 </mapper>

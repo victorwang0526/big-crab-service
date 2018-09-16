@@ -24,6 +24,11 @@ public class Card
 	/**
 	 * 
 	 */
+	private String cardType;
+
+	/**
+	 * 
+	 */
 	private String status;
 
 	/**
@@ -79,6 +84,16 @@ public class Card
 	public void setPassword(String password)
 	{
 		this.password = password;
+	}
+
+	public String getCardType()
+	{
+		return cardType;
+	}
+
+	public void setCardType(String cardType)
+	{
+		this.cardType = cardType;
 	}
 
 	public String getStatus()

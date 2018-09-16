@@ -39,6 +39,8 @@ CREATE TABLE t_card
     id NVARCHAR(32) NOT NULL,
     card_number NVARCHAR(255) NOT NULL,
     password NVARCHAR(255) NOT NULL,
+    card_type NVARCHAR(255) NOT NULL,
+
     status NVARCHAR(32) NOT NULL,
     description NVARCHAR(255),
     last_error_at DATETIME,

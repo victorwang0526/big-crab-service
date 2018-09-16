@@ -1,11 +1,20 @@
 package com.victor.wang.bigCrab.resource;
 
 import com.victor.wang.bigCrab.manager.CardManager;
+import com.victor.wang.bigCrab.model.Card;
 import com.victor.wang.bigCrab.sharedObject.CardCreate;
 import com.victor.wang.bigCrab.sharedObject.CardInfo;
+import com.victor.wang.bigCrab.sharedObject.CardStatus;
 import com.victor.wang.bigCrab.sharedObject.CardUpdate;
 import com.victor.wang.bigCrab.sharedObject.PaginatedAPIResult;
+import com.victor.wang.bigCrab.util.dao.UniqueString;
+import jersey.repackaged.com.google.common.collect.Lists;
 import ma.glasnost.orika.MapperFacade;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
@@ -24,6 +33,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -55,7 +66,38 @@ public class CardResource
 
 	{
 		List<FormDataBodyPart> fileBodyParts = form.getFields("file");
-		String a = "";
+		if (fileBodyParts != null && fileBodyParts.size() > 0)
+		{
+			for (FormDataBodyPart body : fileBodyParts)
+			{
+				InputStream inputStream = body.getValueAs(InputStream.class);
+				try
+				{
+					Workbook wb0 = new XSSFWorkbook(inputStream);
+					Sheet sheet = wb0.getSheetAt(0);
+					List<Card> cards = Lists.newArrayList();
+					for (Row r : sheet)
+					{
+						if (r.getRowNum() < 1)
+						{
+							continue;
+						}
+						Card card = new Card();
+						card.setId(UniqueString.uuidUniqueString());
+						card.setCardNumber(r.getCell(0).getStringCellValue());
+						card.setPassword(r.getCell(1).getStringCellValue());
+						card.setCardType(r.getCell(2).getStringCellValue());
+						card.setStatus(CardStatus.UNUSED.name());
+						cards.add(card);
+					}
+					cardManager.createCards(cards);
+				}
+				catch (IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 

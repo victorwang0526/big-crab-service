@@ -9,7 +9,7 @@ import java.util.List;
  * jersey(resource) + spring(manager) + mybatis(dao/model/xml) generator
  */
 
-public class JSMGenerator
+public class JSMGeneratorForMysql
 {
 
 	public final static String ARTIFACTS = "bigCrab";
@@ -26,7 +26,7 @@ public class JSMGenerator
 
 	public static void main(String[] args)
 	{
-		new JSMGenerator().generateAll("");
+		new JSMGeneratorForMysql().generateAll("");
 	}
 
 	/**

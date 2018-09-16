@@ -10,6 +10,7 @@ import com.victor.wang.bigCrab.util.dao.DaoHelper;
 import ma.glasnost.orika.MapperFacade;
 import net.sf.oval.constraint.AssertValid;
 import net.sf.oval.guard.Guarded;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,23 @@ public class CardManager
 
 	@Autowired
 	private MapperFacade mapper;
+
+	public void createCards(List<Card> cards)
+	{
+		for (Card card : cards)
+		{
+			if (card == null || StringUtils.isEmpty(card.getCardNumber()))
+			{
+				continue;
+			}
+			List<Card> cardAlready = cardDao.getByCardNumber(card.getCardNumber());
+			if (cardAlready != null && cardAlready.size() > 0)
+			{
+				continue;
+			}
+			DaoHelper.insert(cardDao, card);
+		}
+	}
 
 	public Card getCard(String id)
 	{
@@ -62,7 +80,7 @@ public class CardManager
 			int page,
 			int size)
 	{
-		LOGGER.debug("CardManager, findCard; page: {}, size: {}",  page, size);
+		LOGGER.debug("CardManager, findCard; page: {}, size: {}", page, size);
 		CardDao.CardQueryBuild queryBuild = CardDao.CardQueryBuild.build()
 				.pagination(page, size);
 		return cardDao.getList(queryBuild.toParameter());
