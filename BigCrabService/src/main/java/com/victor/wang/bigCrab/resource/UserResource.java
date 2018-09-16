@@ -30,9 +30,6 @@ public class UserResource
 	@Autowired
 	private UserManager userManager;
 
-	@Autowired
-	private MapperFacade mapper;
-
 	//[{"key":"Authorization","value":"Basic YWRtaW46YWRtaW4xMjM=","description":"","enabled":true}]
 	/**
 	 * <h3>Login</h3>.
