@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="bigcrab@116.62.120.169" uuid="1df6ad1b-bd63-47bd-889b-56cd56aa2f8b">
-      <driver-ref>sqlserver.ms</driver-ref>
+    <data-source source="LOCAL" name="bigcrab@localhost" uuid="eca81387-b7c6-4937-aed7-5cc0142f7495">
+      <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>
-      <jdbc-driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbc-driver>
-      <jdbc-url>jdbc:sqlserver://116.62.120.169:1433;database=bigcrab</jdbc-url>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306/bigcrab</jdbc-url>
       <driver-properties>
-        <property name="applicationName" value="DataGrip" />
+        <property name="autoReconnect" value="true" />
+        <property name="zeroDateTimeBehavior" value="convertToNull" />
+        <property name="tinyInt1isBit" value="false" />
+        <property name="characterEncoding" value="utf8" />
+        <property name="characterSetResults" value="utf8" />
+        <property name="yearIsDateType" value="false" />
       </driver-properties>
     </data-source>
   </component>

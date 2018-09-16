@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.victor.wang.bigCrab.dao.LoginSessionDao" >
+    <resultMap id="loginSessionResultMapper" type="com.victor.wang.bigCrab.model.LoginSession" >
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="user_id" property="userId" jdbcType="VARCHAR" />
+        <result column="token" property="token" jdbcType="VARCHAR" />
+        <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+        <result column="last_modified_at" property="lastModifiedAt" jdbcType="TIMESTAMP" />
+        <result column="rvn" property="rvn" jdbcType="INTEGER" />
+    </resultMap>
+    <sql id="allFields" >
+        id,
+        user_id,
+        token,
+        created_at,
+        last_modified_at,
+        rvn
+    </sql>
+
+    <select id="getAll" resultMap="loginSessionResultMapper">
+        SELECT
+        <include refid="allFields" />
+        FROM t_login_session
+        ORDER BY created_at
+    </select>
+
+    <select id="getCount" parameterType="java.util.HashMap" resultType="int">
+        SELECT COUNT(*) as cnt
+        FROM t_login_session
+        WHERE 1=1
+        <include refid="findLoginSessionsParams"/>
+    </select>
+
+    <select id="get" resultMap="loginSessionResultMapper" parameterType="String" >
+        SELECT
+        <include refid="allFields" />
+        FROM t_login_session
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="LoginSession" >
+        INSERT INTO t_login_session (
+        id,
+        user_id,
+        token,
+        created_at,
+        last_modified_at,
+        rvn
+        )
+        VALUES (
+        #{id,jdbcType=VARCHAR},
+        #{userId,jdbcType=VARCHAR},
+        #{token,jdbcType=VARCHAR},
+        #{createdAt,jdbcType=TIMESTAMP},
+        #{lastModifiedAt,jdbcType=TIMESTAMP},
+        #{rvn,jdbcType=INTEGER}
+        )
+    </insert>
+
+    <update id="update" parameterType="LoginSession" >
+        UPDATE t_login_session
+        SET 
+        user_id = #{userId,jdbcType=VARCHAR},
+        token = #{token,jdbcType=VARCHAR},
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+        last_modified_at = getdate(),
+        rvn = rvn+1
+        WHERE id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <sql id="findLoginSessionsParams">
+    </sql>
+    <select id="getList" parameterType="java.util.HashMap" resultMap="loginSessionResultMapper">
+        SELECT * FROM (
+            SELECT
+            <include refid="allFields" />,
+            ROW_NUMBER()
+            <choose>
+                <when test="orderBy != null">
+                    OVER(Order by ${orderBy} )
+                </when>
+                <otherwise>
+                    OVER(Order by created_at )
+                </otherwise>
+            </choose>
+            AS RowId
+            FROM t_login_session
+            WHERE 1=1
+            <include refid="findLoginSessionsParams"/>
+        ) A
+        WHERE RowId BETWEEN #{pageStart} AND #{pageEnd}
+    </select>
+
+    <delete id="purge">
+        DELETE FROM t_login_session
+    </delete>
+
+    <delete id="delete" parameterType="String">
+        DELETE FROM t_login_session
+        WHERE id = #{id}
+    </delete>
+
+
+    <select id="getByToken" resultMap="loginSessionResultMapper">
+        select
+        <include refid="allFields" />
+        from
+        t_login_session
+        where token = #{token}
+        and device_id = #{deviceId}
+    </select>
+
+
+    <delete id="deleteByUserId">
+        delete from t_login_session
+        where user_id = #{userId}
+    </delete>
+
+</mapper>

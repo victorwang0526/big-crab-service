@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.victor.wang.bigCrab.dao.UserDao" >
+    <resultMap id="userResultMapper" type="com.victor.wang.bigCrab.model.User" >
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="login_name" property="loginName" jdbcType="VARCHAR" />
+        <result column="password" property="password" jdbcType="VARCHAR" />
+        <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+        <result column="last_modified_at" property="lastModifiedAt" jdbcType="TIMESTAMP" />
+        <result column="last_login_at" property="lastLoginAt" jdbcType="TIMESTAMP" />
+        <result column="last_login_ip" property="lastLoginIp" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="allFields" >
+        id,
+        login_name,
+        password,
+        created_at,
+        last_modified_at,
+        last_login_at,
+        last_login_ip
+    </sql>
+
+    <select id="getAll" resultMap="userResultMapper">
+        SELECT
+        <include refid="allFields" />
+        FROM t_user
+        ORDER BY created_at
+    </select>
+
+    <select id="getCount" parameterType="java.util.HashMap" resultType="int">
+        SELECT COUNT(*) as cnt
+        FROM t_user
+        WHERE 1=1
+        <include refid="findUsersParams"/>
+    </select>
+
+    <select id="get" resultMap="userResultMapper" parameterType="String" >
+        SELECT
+        <include refid="allFields" />
+        FROM t_user
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="User" >
+        INSERT INTO t_user (
+        id,
+        login_name,
+        password,
+        created_at,
+        last_modified_at,
+        last_login_at,
+        last_login_ip
+        )
+        VALUES (
+        #{id,jdbcType=VARCHAR},
+        #{loginName,jdbcType=VARCHAR},
+        #{password,jdbcType=VARCHAR},
+        #{createdAt,jdbcType=TIMESTAMP},
+        #{lastModifiedAt,jdbcType=TIMESTAMP},
+        #{lastLoginAt,jdbcType=TIMESTAMP},
+        #{lastLoginIp,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <update id="update" parameterType="User" >
+        UPDATE t_user
+        SET 
+        login_name = #{loginName,jdbcType=VARCHAR},
+        password = #{password,jdbcType=VARCHAR},
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+        last_modified_at = getdate(),
+        last_login_at = #{lastLoginAt,jdbcType=TIMESTAMP},
+        last_login_ip = #{lastLoginIp,jdbcType=TIMESTAMP},
+        WHERE id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <sql id="findUsersParams">
+    </sql>
+    <select id="getList" parameterType="java.util.HashMap" resultMap="userResultMapper">
+        SELECT * FROM (
+            SELECT
+            <include refid="allFields" />,
+            ROW_NUMBER()
+            <choose>
+                <when test="orderBy != null">
+                    OVER(Order by ${orderBy} )
+                </when>
+                <otherwise>
+                    OVER(Order by created_at )
+                </otherwise>
+            </choose>
+            AS RowId
+            FROM t_user
+            WHERE 1=1
+            <include refid="findUsersParams"/>
+        ) A
+        WHERE RowId BETWEEN #{pageStart} AND #{pageEnd}
+    </select>
+
+    <delete id="purge">
+        DELETE FROM t_user
+    </delete>
+
+    <delete id="delete" parameterType="String">
+        DELETE FROM t_user
+        WHERE id = #{id}
+    </delete>
+
+
+    <select id="getUserLogin" parameterType="java.util.HashMap" resultMap="userResultMapper">
+        select <include refid="allFields"/>
+        from t_user
+        where login_name = #{username}
+    </select>
+
+</mapper>
