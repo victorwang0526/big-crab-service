@@ -1,0 +1,4 @@
+rootProject.name = 'big-crab-service'
+include 'BigCrabService'
+include 'DBMigration'
+

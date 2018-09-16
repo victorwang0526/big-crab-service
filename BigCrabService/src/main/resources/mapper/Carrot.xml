@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.victor.wang.bigCrab.dao.CarrotDao" >
+    <resultMap id="carrotResultMapper" type="Carrot" >
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="price" property="price"/>
+        <result column="weight" property="weight"/>
+
+        <result column="created_at" property="createdAt"/>
+        <result column="last_modified_at" property="lastModifiedAt"/>
+        <result column="rvn" property="rvn"/>
+    </resultMap>
+    <sql id="allFields" >
+        id,
+        name,
+        price,
+        weight,
+        created_at,
+        last_modified_at,
+        rvn
+    </sql>
+
+    <select id="getAll" resultMap="carrotResultMapper">
+        SELECT
+        <include refid="allFields" />
+        FROM carrot
+        ORDER BY created_at
+    </select>
+
+    <select id="getCount" parameterType="java.util.HashMap" resultType="int">
+        SELECT COUNT(*) as cnt
+        FROM carrot
+        WHERE 1=1
+        <include refid="findCarrotsParams"/>
+    </select>
+
+    <select id="get" resultMap="carrotResultMapper" parameterType="String" >
+        select
+        <include refid="allFields" />
+        from carrot
+        where id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="Carrot" >
+        insert into carrot (
+        id,
+        name,
+        price,
+        weight,
+        created_at,
+        last_modified_at,
+        rvn)
+        values (
+        #{id},
+        #{name},
+        #{price},
+        #{weight},
+        #{createdAt},
+        #{lastModifiedAt},
+        #{rvn}
+        )
+    </insert>
+
+    <update id="update" parameterType="Carrot" >
+        update carrot
+        SET name = #{name},
+        price = #{price},
+        weight = #{weight},
+        created_at = #{createdAt},
+        last_modified_at = #{lastModifiedAt},
+        rvn = #{rvn}
+        where id = #{id}
+    </update>
+
+    <sql id="findCarrotsParams">
+        <if test="name != null">
+            AND name = #{name}
+        </if>
+    </sql>
+
+    <select id="getList" parameterType="java.util.HashMap" resultMap="carrotResultMapper">
+        SELECT
+        <include refid="allFields" />
+        FROM carrot
+        WHERE 1=1
+        <include refid="findCarrotsParams"/>
+        <choose>
+            <when test="orderBy != null">
+                ORDER BY ${orderBy}
+            </when>
+            <otherwise>
+                ORDER BY created_at
+            </otherwise>
+        </choose>
+        <if test="limit != null and offset != null">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
+    </select>
+
+    <delete id="purge">
+        DELETE FROM carrot
+    </delete>
+
+    <delete id="delete" parameterType="String">
+        DELETE FROM carrot
+        WHERE id = #{id}
+    </delete>
+</mapper>

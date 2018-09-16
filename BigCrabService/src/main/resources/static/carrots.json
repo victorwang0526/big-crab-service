@@ -1,0 +1,228 @@
+{
+  "apiVersion" : "1",
+  "swaggerVersion" : "1.2",
+  "basePath" : "/carrot",
+  "resourcePath" : "/carrots",
+  "apis" : [ {
+    "path" : "/carrots",
+    "operations" : [ {
+      "method" : "POST",
+      "nickname" : "createCarrot",
+      "type" : "Object-CarrotInfo",
+      "parameters" : [ {
+        "type" : "Object-CarrotCreate",
+        "description" : "the create object",
+        "paramType" : "body",
+        "name" : "carrotCreate",
+        "required" : true
+      } ],
+      "summary" : "<h3>Description</h3>.",
+      "notes" : "<p>Create a carrot</p>",
+      "consumes" : [ "application/json" ],
+      "produces" : [ "application/json" ]
+    }, {
+      "method" : "GET",
+      "nickname" : "findCarrots",
+      "type" : "Object-PaginatedAPIResult",
+      "parameters" : [ {
+        "type" : "string",
+        "description" : "the carrot name",
+        "paramType" : "query",
+        "name" : "name"
+      }, {
+        "type" : "integer",
+        "format" : "int32",
+        "description" : "the page",
+        "defaultValue" : "1",
+        "paramType" : "query",
+        "name" : "page"
+      }, {
+        "type" : "integer",
+        "format" : "int32",
+        "description" : "the page size",
+        "defaultValue" : "10",
+        "paramType" : "query",
+        "name" : "size"
+      } ],
+      "summary" : "<h3>Description</h3>.",
+      "notes" : "<p>Search carrots, with paginated results.</p>",
+      "produces" : [ "application/json" ]
+    } ]
+  }, {
+    "path" : "/carrots/{id}",
+    "operations" : [ {
+      "method" : "GET",
+      "nickname" : "getCarrot",
+      "type" : "Object-CarrotInfo",
+      "parameters" : [ {
+        "type" : "string",
+        "description" : "The carrot id",
+        "paramType" : "path",
+        "name" : "id",
+        "required" : true
+      } ],
+      "summary" : "<h3>Description</h3>.",
+      "notes" : "<p>Get a carrot</p>",
+      "produces" : [ "application/json" ]
+    }, {
+      "method" : "PUT",
+      "nickname" : "updateCarrot",
+      "type" : "Object-CarrotInfo",
+      "parameters" : [ {
+        "type" : "string",
+        "description" : "the carrot id",
+        "paramType" : "path",
+        "name" : "id",
+        "required" : true
+      }, {
+        "type" : "Object-CarrotUpdate",
+        "description" : "the update object",
+        "paramType" : "body",
+        "name" : "carrotUpdate",
+        "required" : true
+      } ],
+      "summary" : "<h3>Description</h3>.",
+      "notes" : "<p>Update a carrot</p>",
+      "consumes" : [ "application/json" ],
+      "produces" : [ "application/json" ]
+    }, {
+      "method" : "DELETE",
+      "nickname" : "deleteCarrot",
+      "type" : "void",
+      "parameters" : [ {
+        "type" : "string",
+        "description" : "the carrot id",
+        "paramType" : "path",
+        "name" : "id",
+        "required" : true
+      } ],
+      "summary" : "<h3>Description</h3>.",
+      "notes" : "<p>Delete a carrot</p>"
+    } ]
+  } ],
+  "models" : {
+    "Object-CarrotCreate" : {
+      "id" : "Object-CarrotCreate",
+      "properties" : {
+        "toStringExcludeFieldNames" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "price" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "the carrot price"
+        },
+        "weight" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "the carrot weight"
+        }
+      }
+    },
+    "Object-PaginatedAPIResult" : {
+      "id" : "Object-PaginatedAPIResult",
+      "properties" : {
+        "toStringExcludeFieldNames" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "elements" : {
+          "type" : "array",
+          "description" : "The list of results for the requested page",
+          "items" : {
+            "$ref" : "Object-CarrotInfo"
+          }
+        },
+        "paging" : {
+          "type" : "Object-PaginationContext",
+          "description" : "The pagination context, contains the page size, count...etc."
+        }
+      }
+    },
+    "Object-CarrotInfo" : {
+      "id" : "Object-CarrotInfo",
+      "properties" : {
+        "toStringExcludeFieldNames" : {
+          "type" : "array"
+        },
+        "id" : {
+          "type" : "string",
+          "description" : "the carrot id"
+        },
+        "name" : {
+          "type" : "string",
+          "description" : "the carrot name"
+        },
+        "price" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "the carrot price"
+        },
+        "weight" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "the carrot weight"
+        },
+        "createdAt" : {
+          "type" : "DateTime",
+          "description" : "created time"
+        },
+        "lastModifiedAt" : {
+          "type" : "DateTime",
+          "description" : "last modified time"
+        },
+        "rvn" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "current rvn"
+        }
+      }
+    },
+    "Object-CarrotUpdate" : {
+      "id" : "Object-CarrotUpdate",
+      "properties" : {
+        "toStringExcludeFieldNames" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "price" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "the carrot price"
+        },
+        "weight" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "the carrot weight"
+        }
+      }
+    },
+    "Object-PaginationContext" : {
+      "id" : "Object-PaginationContext",
+      "properties" : {
+        "count" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "The page size."
+        },
+        "start" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "The start index of the page. 0 based"
+        },
+        "total" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "The total number of available records available from the API from which this page was obtained.\n May not be set by all APIs"
+        }
+      }
+    }
+  }
+}

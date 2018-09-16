@@ -1,0 +1,109 @@
+group 'com.victor.wang'
+//version '1.0'
+buildscript {
+    ext {
+        springBootVersion = '1.5.7.RELEASE'
+        mysqlConnectionVersion = '5.1.44'
+        swaggerVersion = '1.5.8'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+//apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+
+apply plugin: 'war'
+
+configurations {
+    doclet
+}
+
+war {
+    baseName = 'big-crab-service'
+//    version =  '0.0.1'
+}
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+
+    providedCompile "org.springframework.boot:spring-boot-starter-tomcat:${springBootVersion}"
+    compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}") {
+        exclude group: "org.springframework.boot", module: "spring-boot-starter-tomcat"
+    }
+
+    compile("org.springframework.boot:spring-boot-starter-jersey:${springBootVersion}"){
+        exclude group: "org.springframework.boot", module: "spring-boot-starter-tomcat"
+    }
+
+    compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
+    compile 'org.mybatis.spring.boot:mybatis-spring-boot-starter:1.3.1'
+
+    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
+    compile ("mysql:mysql-connector-java:${mysqlConnectionVersion}")
+    // https://mvnrepository.com/artifact/ma.glasnost.orika/orika-core  对象转换
+    compile group: 'ma.glasnost.orika', name: 'orika-core', version: '1.5.1'
+    // https://mvnrepository.com/artifact/net.sf.oval/oval  校验
+    compile group: 'net.sf.oval', name: 'oval', version: '1.84'
+    // https://mvnrepository.com/artifact/joda-time/joda-time 时间
+    compile group: 'joda-time', name: 'joda-time', version: '2.9.9'
+
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
+
+    //swagger
+//    compile "io.swagger:swagger-jersey2-jaxrs:${swaggerVersion}"
+
+    /**
+     *  see info to https://github.com/victorwang0526/swagger-doclet
+     */
+    doclet(
+            [group: 'com.tenxerconsulting', name: 'swagger-doclet', version: '1.0.7'],
+            [group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0']
+    )
+
+    testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
+}
+
+task generateRestApiDocs(type: Javadoc) {
+
+    // Ideally would use a custom-defined source set above
+    // However, Intelli-J can't handle Sources out of content root
+    // See: https://youtrack.jetbrains.com/issue/IDEA-122577#tab=Comments
+    // and: https://github.com/spockframework/spock/issues/70
+    // So instead "manually" creating the source set
+
+    def sourceList = new ArrayList<File>()
+
+    sourceList.addAll(sourceSets.main.allJava);
+    project(":BigCrabService").fileTree("src/main/java").each {
+        sourceList.add(it)
+    }
+
+    source = sourceList
+    options.classpath = configurations.doclet.files.asType(List)
+    options.docletpath = configurations.doclet.files.asType(List)
+    options.encoding = "UTF-8"
+
+
+    source = sourceSets.main.allJava
+    destinationDir = reporting.file("rest-api-docs")
+    options.classpath = configurations.doclet.files.asType(List)
+    options.docletpath = configurations.doclet.files.asType(List)
+    options.doclet = "com.tenxerconsulting.swagger.doclet.ServiceDoclet"
+    options.addStringOption("apiVersion", "1")
+    options.addStringOption("docBasePath", "/big-crab-service")
+    options.addStringOption("apiBasePath", "/big-crab-service")
+    options.addBooleanOption("skipUiFiles", true)
+}

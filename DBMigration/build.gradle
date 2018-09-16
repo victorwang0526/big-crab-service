@@ -1,0 +1,25 @@
+apply plugin: 'liquibase'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.liquibase:liquibase-gradle-plugin:1.2.1'
+        classpath "mysql:mysql-connector-java:5.1.44"
+    }
+}
+
+def changeFile = file('liquibase/changelog.xml')
+liquibase {
+    activities {
+        main {
+            changeLogFile changeFile
+            url 'jdbc:mysql://localhost:3306/carrot?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC'
+            username 'carrot'
+            password 'carrot'
+        }
+    }
+
+    runList = 'main'
+}

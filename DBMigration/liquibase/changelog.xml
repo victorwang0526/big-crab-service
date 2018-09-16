@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+    <property name="db_schema" value="public"/>
+
+    <!--<changeSet author="Wei" id="set default privileges for users" runOnChange="true" logicalFilePath="/opt/epic/Epic-Fraud-DBMigration/changelog.xml">-->
+        <!--<sql>-->
+            <!--ALTER DEFAULT PRIVILEGES IN SCHEMA ${db_schema} GRANT SELECT ON TABLES TO ${db_user_ro};-->
+            <!--ALTER DEFAULT PRIVILEGES IN SCHEMA ${db_schema} GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO-->
+            <!--${db_user_rw};-->
+            <!--ALTER DEFAULT PRIVILEGES IN SCHEMA ${db_schema} GRANT SELECT, USAGE ON SEQUENCES TO ${db_user_ro};-->
+            <!--ALTER DEFAULT PRIVILEGES IN SCHEMA ${db_schema} GRANT ALL ON SEQUENCES TO ${db_user_rw};-->
+            <!--ALTER DEFAULT PRIVILEGES IN SCHEMA ${db_schema} GRANT ALL ON TABLES TO ${db_user_backup};-->
+            <!--ALTER DEFAULT PRIVILEGES IN SCHEMA ${db_schema} GRANT ALL ON SEQUENCES TO ${db_user_backup};-->
+            <!--ALTER DEFAULT PRIVILEGES IN SCHEMA ${db_schema} GRANT ALL ON FUNCTIONS TO ${db_user_backup};-->
+        <!--</sql>-->
+    <!--</changeSet>-->
+    <changeSet author="Victor Wang" id="20180322144001" logicalFilePath="/opt/epic/Epic-Fraud-DBMigration/changelog.xml">
+        <sqlFile path="database/20180322144001_create_carrot.sql"
+                 relativeToChangelogFile="true"/>
+    </changeSet>
+</databaseChangeLog>
