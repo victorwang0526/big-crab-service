@@ -20,7 +20,7 @@ public class AppConfig
 	public BeanNameAutoProxyCreator beanNameAutoProxyCreator()
 	{
 		BeanNameAutoProxyCreator beanNameAutoProxyCreator = new BeanNameAutoProxyCreator();
-		beanNameAutoProxyCreator.setBeanNames("carrotManager");
+		beanNameAutoProxyCreator.setBeanNames("carrotManager", "userManager");
 		beanNameAutoProxyCreator.setProxyTargetClass(true);
 		beanNameAutoProxyCreator.setInterceptorNames("ovalGuardInterceptor");
 		return beanNameAutoProxyCreator;

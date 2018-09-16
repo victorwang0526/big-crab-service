@@ -108,7 +108,6 @@
         from
         t_login_session
         where token = #{token}
-        and device_id = #{deviceId}
     </select>
 
 

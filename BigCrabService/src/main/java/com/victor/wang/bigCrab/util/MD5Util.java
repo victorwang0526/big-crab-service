@@ -4,6 +4,7 @@ import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 public class MD5Util
 {
@@ -30,6 +31,8 @@ public class MD5Util
 	}
 
 	public static void main(String[] args){
+		String aa = "admin:admin123";
+		Base64.getEncoder().encode(aa.getBytes());
 		String s = encoderByMd5("admin123");
 	}
 }

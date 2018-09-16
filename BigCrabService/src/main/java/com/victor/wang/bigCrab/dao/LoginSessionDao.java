@@ -14,7 +14,7 @@ public interface LoginSessionDao
 
 	void deleteByUserId(@Param("userId") String userId);
 
-	List<LoginSession> getByToken(@Param("token") String token, @Param("deviceId") String deviceID);
+	List<LoginSession> getByToken(@Param("token") String token);
 
 	class LoginSessionQueryBuild
 			extends QueryBuilder

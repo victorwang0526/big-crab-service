@@ -1,10 +1,10 @@
 server:
   port: 8091
-  context-path: /big-crab-service
+  context-path: /bigcrab
 spring:
   jersey:
-    type: filter
-    application-path: /api
+#    type: filter
+#    application-path: /api
 #  jpa:
 #    database: mysql
 #    show-sql: true

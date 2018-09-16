@@ -39,7 +39,7 @@ public class JerseyConfig
 	private void registerEndpoints()
 	{
 		//register resource
-		register(CarrotResource.class);
+		packages("com.victor.wang.bigCrab.resource");
 		// Available at /<Jersey's servlet path>/application.wadl
 		this.register(WadlResource.class);
 	}

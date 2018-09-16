@@ -18,7 +18,6 @@ public class AuthorizationInterceptor
 		implements ContainerRequestFilter
 {
 	public static final String TOKEN = "token";
-	public static final String DEVICE_ID = "deviceID";
 
 	@Autowired
 	private LoginSessionDao loginSessionDao;
@@ -50,12 +49,7 @@ public class AuthorizationInterceptor
 				throw new BadRequestException(401, "authorization_needed", "请输入token");
 			}
 
-			String deviceID = requestContext.getHeaderString(DEVICE_ID);
-			if (deviceID == null || StringUtils.isEmpty(deviceID)) {
-				deviceID = "0";
-			}
-
-			List<LoginSession> loginSessions = loginSessionDao.getByToken(token, deviceID);
+			List<LoginSession> loginSessions = loginSessionDao.getByToken(token);
 
 			if(loginSessions == null || loginSessions.size() == 0){
 				throw new BadRequestException(403, "authorization_error", "无效token");
