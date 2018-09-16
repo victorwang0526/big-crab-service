@@ -65,6 +65,8 @@ dependencies {
     //swagger
 //    compile "io.swagger:swagger-jersey2-jaxrs:${swaggerVersion}"
 
+    compile 'org.glassfish.jersey.media:jersey-media-multipart:2.25.1'
+
     /**
      *  see info to https://github.com/victorwang0526/swagger-doclet
      */

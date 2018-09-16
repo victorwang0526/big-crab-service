@@ -1,6 +1,5 @@
 package com.victor.wang.bigCrab;
 
-import com.victor.wang.bigCrab.resource.CarrotResource;
 import com.victor.wang.bigCrab.util.exception.ApplicationExceptionMapper;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.wadl.internal.WadlResource;

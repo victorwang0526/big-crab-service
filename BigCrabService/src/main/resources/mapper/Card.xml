@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.victor.wang.bigCrab.dao.CardDao" >
+    <resultMap id="cardResultMapper" type="com.victor.wang.bigCrab.model.Card" >
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="card_number" property="cardNumber" jdbcType="VARCHAR" />
+        <result column="password" property="password" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="description" property="description" jdbcType="VARCHAR" />
+        <result column="last_error_at" property="lastErrorAt" jdbcType="TIMESTAMP" />
+        <result column="error_times" property="errorTimes" jdbcType="INTEGER" />
+        <result column="redeem_at" property="redeemAt" jdbcType="TIMESTAMP" />
+        <result column="deliver_at" property="deliverAt" jdbcType="TIMESTAMP" />
+        <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+        <result column="last_modified_at" property="lastModifiedAt" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="allFields" >
+        id,
+        card_number,
+        password,
+        status,
+        description,
+        last_error_at,
+        error_times,
+        redeem_at,
+        deliver_at,
+        created_at,
+        last_modified_at
+    </sql>
+
+    <select id="getAll" resultMap="cardResultMapper">
+        SELECT
+        <include refid="allFields" />
+        FROM t_card
+        ORDER BY created_at
+    </select>
+
+    <select id="getCount" parameterType="java.util.HashMap" resultType="int">
+        SELECT COUNT(*) as cnt
+        FROM t_card
+        WHERE 1=1
+        <include refid="findCardsParams"/>
+    </select>
+
+    <select id="get" resultMap="cardResultMapper" parameterType="String" >
+        SELECT
+        <include refid="allFields" />
+        FROM t_card
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="Card" >
+        INSERT INTO t_card (
+        id,
+        card_number,
+        password,
+        status,
+        description,
+        last_error_at,
+        error_times,
+        redeem_at,
+        deliver_at,
+        created_at,
+        last_modified_at
+        )
+        VALUES (
+        #{id,jdbcType=VARCHAR},
+        #{cardNumber,jdbcType=VARCHAR},
+        #{password,jdbcType=VARCHAR},
+        #{status,jdbcType=VARCHAR},
+        #{description,jdbcType=VARCHAR},
+        #{lastErrorAt,jdbcType=TIMESTAMP},
+        #{errorTimes,jdbcType=INTEGER},
+        #{redeemAt,jdbcType=TIMESTAMP},
+        #{deliverAt,jdbcType=TIMESTAMP},
+        #{createdAt,jdbcType=TIMESTAMP},
+        #{lastModifiedAt,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <update id="update" parameterType="Card" >
+        UPDATE t_card
+        SET 
+        card_number = #{cardNumber,jdbcType=VARCHAR},
+        password = #{password,jdbcType=VARCHAR},
+        status = #{status,jdbcType=VARCHAR},
+        description = #{description,jdbcType=VARCHAR},
+        last_error_at = #{lastErrorAt,jdbcType=TIMESTAMP},
+        error_times = #{errorTimes,jdbcType=INTEGER},
+        redeem_at = #{redeemAt,jdbcType=TIMESTAMP},
+        deliver_at = #{deliverAt,jdbcType=TIMESTAMP},
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+        last_modified_at = getdate(),
+        WHERE id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <sql id="findCardsParams">
+    </sql>
+    <select id="getList" parameterType="java.util.HashMap" resultMap="cardResultMapper">
+        SELECT * FROM (
+            SELECT
+            <include refid="allFields" />,
+            ROW_NUMBER()
+            <choose>
+                <when test="orderBy != null">
+                    OVER(Order by ${orderBy} )
+                </when>
+                <otherwise>
+                    OVER(Order by created_at )
+                </otherwise>
+            </choose>
+            AS RowId
+            FROM t_card
+            WHERE 1=1
+            <include refid="findCardsParams"/>
+        ) A
+        WHERE RowId BETWEEN #{pageStart} AND #{pageEnd}
+    </select>
+
+    <delete id="purge">
+        DELETE FROM t_card
+    </delete>
+
+    <delete id="delete" parameterType="String">
+        DELETE FROM t_card
+        WHERE id = #{id}
+    </delete>
+</mapper>

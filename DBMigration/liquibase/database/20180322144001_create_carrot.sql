@@ -40,6 +40,7 @@ CREATE TABLE t_card
     card_number NVARCHAR(255) NOT NULL,
     password NVARCHAR(255) NOT NULL,
     status NVARCHAR(32) NOT NULL,
+    description NVARCHAR(255),
     last_error_at DATETIME,
     error_times INT,
     redeem_at DATETIME,
