@@ -1,6 +1,8 @@
 package com.victor.wang.bigCrab;
 
+import com.victor.wang.bigCrab.resource.CardResource;
 import com.victor.wang.bigCrab.util.exception.ApplicationExceptionMapper;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.wadl.internal.WadlResource;
 import org.glassfish.jersey.servlet.ServletProperties;
@@ -30,6 +32,7 @@ public class JerseyConfig
 
 		//register exception
 		register(ApplicationExceptionMapper.class);
+		register(MultiPartFeature.class);
 
 		property(ServletProperties.FILTER_FORWARD_ON_404, true);
 
@@ -39,6 +42,7 @@ public class JerseyConfig
 	{
 		//register resource
 		packages("com.victor.wang.bigCrab.resource");
+//		register(CardResource.class);
 		// Available at /<Jersey's servlet path>/application.wadl
 		this.register(WadlResource.class);
 	}
