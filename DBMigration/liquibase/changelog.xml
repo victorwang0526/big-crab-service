@@ -21,4 +21,8 @@
         <sqlFile path="database/20180322144001_create_carrot.sql"
                  relativeToChangelogFile="true"/>
     </changeSet>
+    <changeSet author="Victor Wang" id="20180918131801" logicalFilePath="/opt/epic/Epic-Fraud-DBMigration/changelog.xml">
+        <sqlFile path="database/20180918131801_update_card.sql"
+                 relativeToChangelogFile="true"/>
+    </changeSet>
 </databaseChangeLog>

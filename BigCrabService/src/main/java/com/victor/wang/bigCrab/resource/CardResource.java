@@ -3,8 +3,9 @@ package com.victor.wang.bigCrab.resource;
 import com.victor.wang.bigCrab.manager.CardManager;
 import com.victor.wang.bigCrab.model.Card;
 import com.victor.wang.bigCrab.sharedObject.CardInfo;
+import com.victor.wang.bigCrab.sharedObject.CardRedeemRequest;
+import com.victor.wang.bigCrab.sharedObject.CardValidateRequest;
 import com.victor.wang.bigCrab.sharedObject.CardStatus;
-import com.victor.wang.bigCrab.sharedObject.CardUpdate;
 import com.victor.wang.bigCrab.sharedObject.PaginatedAPIResult;
 import com.victor.wang.bigCrab.util.dao.UniqueString;
 import jersey.repackaged.com.google.common.collect.Lists;
@@ -170,6 +171,41 @@ public class CardResource
 	{
 		return mapper.map(cardManager.frozen(cardNumber), CardInfo.class);
 	}
+
+	/**
+	 * <h3>Description</h3>.
+	 * <p>校验卡</p>
+	 *
+	 * @param cardNumber         the card number
+	 */
+	@PUT
+	@Path("{cardNumber}/validate")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public CardInfo validate(@PathParam("cardNumber") String cardNumber,
+						   CardValidateRequest validateRequest)
+	{
+		return mapper.map(cardManager.validate(cardNumber, validateRequest), CardInfo.class);
+	}
+
+
+	/**
+	 * <h3>Description</h3>.
+	 * <p>填写地址</p>
+	 *
+	 * @param cardNumber         the card number
+	 */
+	@PUT
+	@Path("{cardNumber}/redeem")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public CardInfo redeem(@PathParam("cardNumber") String cardNumber,
+						   CardRedeemRequest redeemRequest)
+	{
+		return mapper.map(cardManager.redeem(cardNumber, redeemRequest), CardInfo.class);
+	}
+
+
 //	/**
 //	 * <h3>Description</h3>.
 //	 * <p>Create a card</p>

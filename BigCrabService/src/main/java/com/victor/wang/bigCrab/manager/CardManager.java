@@ -4,10 +4,9 @@ import com.victor.wang.bigCrab.dao.CardDao;
 import com.victor.wang.bigCrab.exception.CardNotFoundException;
 import com.victor.wang.bigCrab.exception.base.BadRequestException;
 import com.victor.wang.bigCrab.model.Card;
-import com.victor.wang.bigCrab.sharedObject.CardCreate;
+import com.victor.wang.bigCrab.sharedObject.CardRedeemRequest;
+import com.victor.wang.bigCrab.sharedObject.CardValidateRequest;
 import com.victor.wang.bigCrab.sharedObject.CardStatus;
-import com.victor.wang.bigCrab.sharedObject.CardUpdate;
-import com.victor.wang.bigCrab.util.UniqueString;
 import com.victor.wang.bigCrab.util.dao.DaoHelper;
 import ma.glasnost.orika.MapperFacade;
 import net.sf.oval.constraint.AssertValid;
@@ -19,6 +18,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -130,6 +133,8 @@ public class CardManager
 			throw new BadRequestException(400, "card_error", "该卡不是冻结状态，无法解除冻结。");
 		}
 		card.setStatus(CardStatus.UNUSED);
+		card.setErrorTimes(0);
+		card.setLastErrorAt(null);
 		DaoHelper.doUpdate(cardDao, card);
 		return card;
 	}
@@ -140,6 +145,45 @@ public class CardManager
 		card.setStatus(CardStatus.FROZEN);
 		DaoHelper.doUpdate(cardDao, card);
 		return card;
+	}
+
+	public Card validate(String cardNumber, @AssertValid CardValidateRequest validateRequest)
+	{
+		Card card = cardDao.getByCardNumber(cardNumber);
+
+		if (card == null)
+		{
+			throw new BadRequestException(400, "card_error", "卡号或密码不正确。");
+		}
+		if (!card.getPassword().equals(validateRequest.getPassword()))
+		{
+
+//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			card.setLastErrorAt(new Date());
+			card.setErrorTimes(card.getErrorTimes() + 1);
+			if (card.getErrorTimes() > 4)
+			{
+				card.setStatus(CardStatus.FROZEN);
+				DaoHelper.doUpdate(cardDao, card);
+				throw new BadRequestException(400, "card_error", "密码错误次数大于5次，已冻结，请联系客服。");
+			}
+			DaoHelper.doUpdate(cardDao, card);
+			throw new BadRequestException(400, "card_error", "卡号或密码不正确，剩余"+(5-card.getErrorTimes())+"次。");
+		}
+		if (card.getStatus() == CardStatus.FROZEN)
+		{
+			throw new BadRequestException(400, "card_error", "该卡号已被冻结，请联系客服。");
+		}
+		if (card.getStatus() == CardStatus.UNUSED)
+		{
+			throw new BadRequestException(400, "card_error", "该卡号已被使用.");
+		}
+		return card;
+	}
+
+	public Card redeem(String cardNumber, @AssertValid CardRedeemRequest redeemRequest)
+	{
+		return null;
 	}
 
 //	public void deleteCard(String id)

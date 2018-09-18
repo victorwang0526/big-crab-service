@@ -1,0 +1,1 @@
+ALTER TABLE bigcrab.t_card ADD rvn INT NULL;
