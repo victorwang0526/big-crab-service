@@ -1,5 +1,7 @@
 package com.victor.wang.bigCrab;
 
+import com.victor.wang.bigCrab.filter.AuthorizationInterceptor;
+import com.victor.wang.bigCrab.filter.CORSResponseFilter;
 import com.victor.wang.bigCrab.resource.CardResource;
 import com.victor.wang.bigCrab.util.exception.ApplicationExceptionMapper;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
@@ -27,6 +29,9 @@ public class JerseyConfig
 
 	public JerseyConfig()
 	{
+
+		register(CORSResponseFilter.class);
+		register(AuthorizationInterceptor.class);
 
 		this.registerEndpoints();
 

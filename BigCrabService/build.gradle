@@ -3,7 +3,7 @@ group 'com.victor.wang'
 buildscript {
     ext {
         springBootVersion = '1.5.7.RELEASE'
-        mysqlConnectionVersion = '5.1.44'
+        mysqlConnectionVersion = '8.0.12'
         swaggerVersion = '1.5.8'
     }
     repositories {

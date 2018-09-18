@@ -1,6 +1,6 @@
 server:
   port: 8091
-  context-path: /bigcrab
+  context-path: /big-crab-service
 spring:
   jersey:
 #    type: filter
