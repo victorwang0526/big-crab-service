@@ -95,7 +95,7 @@
         redeem_at = #{redeemAt,jdbcType=TIMESTAMP},
         deliver_at = #{deliverAt,jdbcType=TIMESTAMP},
         created_at = #{createdAt,jdbcType=TIMESTAMP},
-        last_modified_at = getdate(),
+        last_modified_at = now()
         WHERE id = #{id,jdbcType=VARCHAR}
     </update>
 

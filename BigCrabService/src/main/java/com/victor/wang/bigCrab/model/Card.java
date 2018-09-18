@@ -1,5 +1,7 @@
 package com.victor.wang.bigCrab.model;
 import com.victor.wang.bigCrab.model.base.AuditedMysqlEntity;
+import com.victor.wang.bigCrab.sharedObject.CardStatus;
+
 import java.util.Date;
 
 public class Card
@@ -29,7 +31,7 @@ public class Card
 	/**
 	 * 
 	 */
-	private String status;
+	private CardStatus status;
 
 	/**
 	 * 
@@ -96,12 +98,12 @@ public class Card
 		this.cardType = cardType;
 	}
 
-	public String getStatus()
+	public CardStatus getStatus()
 	{
 		return status;
 	}
 
-	public void setStatus(String status)
+	public void setStatus(CardStatus status)
 	{
 		this.status = status;
 	}

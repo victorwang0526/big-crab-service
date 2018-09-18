@@ -2,6 +2,7 @@ package com.victor.wang.bigCrab.manager;
 
 import com.victor.wang.bigCrab.dao.CardDao;
 import com.victor.wang.bigCrab.exception.CardNotFoundException;
+import com.victor.wang.bigCrab.exception.base.BadRequestException;
 import com.victor.wang.bigCrab.model.Card;
 import com.victor.wang.bigCrab.sharedObject.CardCreate;
 import com.victor.wang.bigCrab.sharedObject.CardStatus;
@@ -105,8 +106,18 @@ public class CardManager
 	public Card markPhone(String cardNumber)
 	{
 		Card card = this.getCard(cardNumber);
+
+		if (card.getStatus() == CardStatus.PHONED)
+		{
+			return card;
+		}
+
+		if (card.getStatus() != CardStatus.UNUSED)
+		{
+			throw new BadRequestException(400, "card_error", "只有未使用的才可标记成电话预约。");
+		}
 		card.setRedeemAt(DateTime.now().toDate());
-		card.setStatus(CardStatus.PHONED.name());
+		card.setStatus(CardStatus.PHONED);
 		DaoHelper.doUpdate(cardDao, card);
 		return card;
 	}
@@ -114,7 +125,19 @@ public class CardManager
 	public Card unfrozen(String cardNumber)
 	{
 		Card card = this.getCard(cardNumber);
-		card.setStatus(CardStatus.UNUSED.name());
+		if (card.getStatus() != CardStatus.FROZEN)
+		{
+			throw new BadRequestException(400, "card_error", "该卡不是冻结状态，无法解除冻结。");
+		}
+		card.setStatus(CardStatus.UNUSED);
+		DaoHelper.doUpdate(cardDao, card);
+		return card;
+	}
+
+	public Card frozen(String cardNumber)
+	{
+		Card card = this.getCard(cardNumber);
+		card.setStatus(CardStatus.FROZEN);
 		DaoHelper.doUpdate(cardDao, card);
 		return card;
 	}

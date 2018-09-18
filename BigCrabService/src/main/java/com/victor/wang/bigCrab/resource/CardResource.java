@@ -80,7 +80,7 @@ public class CardResource
 						card.setCardNumber(r.getCell(0).getStringCellValue());
 						card.setPassword(r.getCell(1).getStringCellValue());
 						card.setCardType(r.getCell(2).getStringCellValue());
-						card.setStatus(CardStatus.UNUSED.name());
+						card.setStatus(CardStatus.UNUSED);
 						cards.add(card);
 					}
 					cardManager.createCards(cards);
@@ -137,7 +137,6 @@ public class CardResource
 	 */
 	@PUT
 	@Path("{cardNumber}/phone")
-	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public CardInfo makePhone(@PathParam("cardNumber") String cardNumber)
 	{
@@ -152,11 +151,24 @@ public class CardResource
 	 */
 	@PUT
 	@Path("{cardNumber}/unfrozen")
-	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public CardInfo unfrozen(@PathParam("cardNumber") String cardNumber)
 	{
 		return mapper.map(cardManager.unfrozen(cardNumber), CardInfo.class);
+	}
+
+	/**
+	 * <h3>Description</h3>.
+	 * <p>冻结</p>
+	 *
+	 * @param cardNumber         the card number
+	 */
+	@PUT
+	@Path("{cardNumber}/frozen")
+	@Produces(MediaType.APPLICATION_JSON)
+	public CardInfo frozen(@PathParam("cardNumber") String cardNumber)
+	{
+		return mapper.map(cardManager.frozen(cardNumber), CardInfo.class);
 	}
 //	/**
 //	 * <h3>Description</h3>.
