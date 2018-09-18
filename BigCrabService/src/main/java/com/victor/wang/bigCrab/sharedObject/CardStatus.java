@@ -6,7 +6,8 @@ public enum CardStatus
 	REDEEMED,
 	DELIVERED,
 	RECEIVED,
-	FROZEN;
+	FROZEN,
+	PHONED;
 
 //	public static String getName(CardStatus status){
 //		if(status == null){

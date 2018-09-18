@@ -11,11 +11,20 @@ public interface CardDao
 		extends GenericDao<String, Card>
 {
 
-	public List<Card> getByCardNumber(@Param("cardNumber") String cardNumber);
+	public Card getByCardNumber(@Param("cardNumber") String cardNumber);
 
 	class CardQueryBuild
 			extends QueryBuilder
 	{
+		public CardQueryBuild filterByCardNumber(String cardNumber)
+		{
+			return add("cardNumber", cardNumber);
+		}
+
+		public CardQueryBuild filterByStatus(String status)
+		{
+			return add("status", status);
+		}
 
 		public static CardQueryBuild build()
 		{

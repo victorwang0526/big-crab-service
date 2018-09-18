@@ -2,7 +2,6 @@ package com.victor.wang.bigCrab.resource;
 
 import com.victor.wang.bigCrab.manager.CardManager;
 import com.victor.wang.bigCrab.model.Card;
-import com.victor.wang.bigCrab.sharedObject.CardCreate;
 import com.victor.wang.bigCrab.sharedObject.CardInfo;
 import com.victor.wang.bigCrab.sharedObject.CardStatus;
 import com.victor.wang.bigCrab.sharedObject.CardUpdate;
@@ -10,20 +9,16 @@ import com.victor.wang.bigCrab.sharedObject.PaginatedAPIResult;
 import com.victor.wang.bigCrab.util.dao.UniqueString;
 import jersey.repackaged.com.google.common.collect.Lists;
 import ma.glasnost.orika.MapperFacade;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
-import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -33,7 +28,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -63,7 +57,6 @@ public class CardResource
 	@Path("import")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public void importCards(FormDataMultiPart form)
-
 	{
 		List<FormDataBodyPart> fileBodyParts = form.getFields("file");
 		if (fileBodyParts != null && fileBodyParts.size() > 0)
@@ -100,21 +93,71 @@ public class CardResource
 		}
 	}
 
+	/**
+	 * <h3>Description</h3>.
+	 * <p>Get a card card number</p>
+	 *
+	 * @param cardNumber The card number
+	 */
+	@GET
+	@Path("{cardNumber}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public CardInfo getCard(@PathParam("cardNumber") String cardNumber)
+	{
+		return mapper.map(cardManager.getCard(cardNumber), CardInfo.class);
+	}
 
 	/**
 	 * <h3>Description</h3>.
-	 * <p>Get a card</p>
+	 * <p>Search cards, with paginated results.</p>
 	 *
-	 * @param id The card id
+	 * @param page the page
+	 * @param size the page size
 	 */
 	@GET
-	@Path("{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public CardInfo getCard(@PathParam("id") String id)
+	public PaginatedAPIResult<CardInfo> findCards(
+			@QueryParam("cardNumber") String cardNumber,
+			@QueryParam("status") String status,
+			@QueryParam("page") @DefaultValue("1") int page,
+			@QueryParam("size") @DefaultValue("10") int size)
 	{
-		return mapper.map(cardManager.getCard(id), CardInfo.class);
+		return new PaginatedAPIResult<>(
+				mapper.mapAsList(cardManager.findCards(cardNumber, status, page, size), CardInfo.class),
+				page,
+				size,
+				cardManager.countCards(cardNumber, status));
 	}
 
+	/**
+	 * <h3>Description</h3>.
+	 * <p>标记为电话预约</p>
+	 *
+	 * @param cardNumber         the card number
+	 */
+	@PUT
+	@Path("{cardNumber}/phone")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public CardInfo makePhone(@PathParam("cardNumber") String cardNumber)
+	{
+		return mapper.map(cardManager.markPhone(cardNumber), CardInfo.class);
+	}
+
+	/**
+	 * <h3>Description</h3>.
+	 * <p>解除冻结</p>
+	 *
+	 * @param cardNumber         the card number
+	 */
+	@PUT
+	@Path("{cardNumber}/unfrozen")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public CardInfo unfrozen(@PathParam("cardNumber") String cardNumber)
+	{
+		return mapper.map(cardManager.unfrozen(cardNumber), CardInfo.class);
+	}
 //	/**
 //	 * <h3>Description</h3>.
 //	 * <p>Create a card</p>
@@ -129,21 +172,21 @@ public class CardResource
 //		return mapper.map(cardManager.createCard(cardCreate), CardInfo.class);
 //	}
 
-	/**
-	 * <h3>Description</h3>.
-	 * <p>Update a card</p>
-	 *
-	 * @param id         the card id
-	 * @param cardUpdate the update object
-	 */
-	@PUT
-	@Path("{id}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public CardInfo updateCard(@PathParam("id") String id, CardUpdate cardUpdate)
-	{
-		return mapper.map(cardManager.updateCard(id, cardUpdate), CardInfo.class);
-	}
+//	/**
+//	 * <h3>Description</h3>.
+//	 * <p>Update a card</p>
+//	 *
+//	 * @param id         the card id
+//	 * @param cardUpdate the update object
+//	 */
+//	@PUT
+//	@Path("{id}")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@Produces(MediaType.APPLICATION_JSON)
+//	public CardInfo updateCard(@PathParam("id") String id, CardUpdate cardUpdate)
+//	{
+//		return mapper.map(cardManager.updateCard(id, cardUpdate), CardInfo.class);
+//	}
 
 //	/**
 //	 * <h3>Description</h3>.
@@ -158,23 +201,5 @@ public class CardResource
 //		cardManager.deleteCard(id);
 //	}
 
-	/**
-	 * <h3>Description</h3>.
-	 * <p>Search cards, with paginated results.</p>
-	 *
-	 * @param page the page
-	 * @param size the page size
-	 */
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public PaginatedAPIResult<CardInfo> findCards(
-			@QueryParam("page") @DefaultValue("1") int page,
-			@QueryParam("size") @DefaultValue("10") int size)
-	{
-		return new PaginatedAPIResult<>(
-				mapper.mapAsList(cardManager.findCards(page, size), CardInfo.class),
-				page,
-				size,
-				cardManager.countCards());
-	}
+
 }
