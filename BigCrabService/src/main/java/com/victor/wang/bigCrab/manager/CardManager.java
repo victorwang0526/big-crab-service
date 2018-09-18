@@ -183,6 +183,7 @@ public class CardManager
 
 	public Card redeem(String cardNumber, @AssertValid CardRedeemRequest redeemRequest)
 	{
+		//todo 兑换并发货
 		return null;
 	}
 
