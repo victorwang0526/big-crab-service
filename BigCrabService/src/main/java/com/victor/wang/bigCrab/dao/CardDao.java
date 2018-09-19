@@ -1,6 +1,7 @@
 package com.victor.wang.bigCrab.dao;
 
 import com.victor.wang.bigCrab.model.Card;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -18,11 +19,17 @@ public interface CardDao
 	{
 		public CardQueryBuild filterByCardNumber(String cardNumber)
 		{
+			if(StringUtils.isBlank(cardNumber)){
+				return this;
+			}
 			return add("cardNumber", cardNumber);
 		}
 
 		public CardQueryBuild filterByStatus(String status)
 		{
+			if(StringUtils.isBlank(status)){
+				return this;
+			}
 			return add("status", status);
 		}
 
