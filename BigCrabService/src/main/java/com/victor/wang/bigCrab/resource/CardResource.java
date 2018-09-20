@@ -6,6 +6,7 @@ import com.victor.wang.bigCrab.sharedObject.CardInfo;
 import com.victor.wang.bigCrab.sharedObject.CardRedeemRequest;
 import com.victor.wang.bigCrab.sharedObject.CardRequest;
 import com.victor.wang.bigCrab.sharedObject.CardValidateRequest;
+import com.victor.wang.bigCrab.sharedObject.DeliverInfo;
 import com.victor.wang.bigCrab.sharedObject.lov.CardStatus;
 import com.victor.wang.bigCrab.sharedObject.PaginatedAPIResult;
 import com.victor.wang.bigCrab.util.dao.UniqueString;
@@ -135,7 +136,7 @@ public class CardResource
 	 * <h3>Description</h3>.
 	 * <p>标记为电话预约</p>
 	 *
-	 * @param request         the card number
+	 * @param request the card number
 	 */
 	@PUT
 	@Path("phone")
@@ -149,7 +150,7 @@ public class CardResource
 	 * <h3>Description</h3>.
 	 * <p>解除冻结</p>
 	 *
-	 * @param request         the card number
+	 * @param request the card number
 	 */
 	@PUT
 	@Path("unfrozen")
@@ -163,7 +164,7 @@ public class CardResource
 	 * <h3>Description</h3>.
 	 * <p>冻结</p>
 	 *
-	 * @param request         the card number
+	 * @param request the card number
 	 */
 	@PUT
 	@Path("frozen")
@@ -177,14 +178,14 @@ public class CardResource
 	 * <h3>Description</h3>.
 	 * <p>校验卡</p>
 	 *
-	 * @param cardNumber         the card number
+	 * @param cardNumber the card number
 	 */
 	@PUT
 	@Path("{cardNumber}/validate")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public CardInfo validate(@PathParam("cardNumber") String cardNumber,
-						   CardValidateRequest validateRequest)
+							 CardValidateRequest validateRequest)
 	{
 		return mapper.map(cardManager.validate(cardNumber, validateRequest), CardInfo.class);
 	}
@@ -194,16 +195,16 @@ public class CardResource
 	 * <h3>Description</h3>.
 	 * <p>填写地址</p>
 	 *
-	 * @param cardNumber         the card number
+	 * @param cardNumber the card number
 	 */
 	@PUT
 	@Path("{cardNumber}/redeem")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public CardInfo redeem(@PathParam("cardNumber") String cardNumber,
-						   CardRedeemRequest redeemRequest)
+	public DeliverInfo redeem(@PathParam("cardNumber") String cardNumber,
+							  CardRedeemRequest redeemRequest)
 	{
-		return mapper.map(cardManager.redeem(cardNumber, redeemRequest), CardInfo.class);
+		return mapper.map(cardManager.redeem(cardNumber, redeemRequest), DeliverInfo.class);
 	}
 
 

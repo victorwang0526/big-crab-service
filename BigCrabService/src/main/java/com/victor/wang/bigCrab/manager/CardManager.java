@@ -1,6 +1,7 @@
 package com.victor.wang.bigCrab.manager;
 
 import com.victor.wang.bigCrab.dao.CardDao;
+import com.victor.wang.bigCrab.dao.DeliverDao;
 import com.victor.wang.bigCrab.exception.CardNotFoundException;
 import com.victor.wang.bigCrab.exception.base.BadRequestException;
 import com.victor.wang.bigCrab.model.Card;
@@ -32,7 +33,10 @@ public class CardManager
 	private static final Logger LOGGER = LoggerFactory.getLogger(CardManager.class);
 
 	@Autowired
-	CardDao cardDao;
+	private CardDao cardDao;
+
+	@Autowired
+	private DeliverDao deliverDao;
 
 	@Autowired
 	private MapperFacade mapper;
@@ -202,7 +206,7 @@ public class CardManager
 		return card;
 	}
 
-	public Card redeem(String cardNumber, @AssertValid CardRedeemRequest redeemRequest)
+	public Deliver redeem(String cardNumber, @AssertValid CardRedeemRequest redeemRequest)
 	{
 		CardValidateRequest request = new CardValidateRequest();
 		request.setPassword(redeemRequest.getPassword());
@@ -212,8 +216,9 @@ public class CardManager
 		deliver.setCardNumber(cardNumber);
 		deliver.setId(UniqueString.uuidUniqueString());
 		deliver.setStatus(DeliverStatus.REDEEMED);
-		//todo 兑换并发货
-		return null;
+
+		DaoHelper.insert(deliverDao, deliver);
+		return deliver;
 	}
 
 //	public void deleteCard(String id)

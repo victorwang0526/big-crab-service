@@ -26,7 +26,7 @@ public class JSMGenerator
 
 	public static void main(String[] args)
 	{
-		new JSMGenerator().generateAll("t_deliver");
+		new JSMGenerator().generateAll("");
 	}
 
 	/**
