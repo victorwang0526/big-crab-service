@@ -4,6 +4,7 @@ import com.victor.wang.bigCrab.manager.CardManager;
 import com.victor.wang.bigCrab.model.Card;
 import com.victor.wang.bigCrab.sharedObject.CardInfo;
 import com.victor.wang.bigCrab.sharedObject.CardRedeemRequest;
+import com.victor.wang.bigCrab.sharedObject.CardRequest;
 import com.victor.wang.bigCrab.sharedObject.CardValidateRequest;
 import com.victor.wang.bigCrab.sharedObject.CardStatus;
 import com.victor.wang.bigCrab.sharedObject.PaginatedAPIResult;
@@ -134,42 +135,42 @@ public class CardResource
 	 * <h3>Description</h3>.
 	 * <p>标记为电话预约</p>
 	 *
-	 * @param cardNumber         the card number
+	 * @param request         the card number
 	 */
 	@PUT
-	@Path("{cardNumber}/phone")
+	@Path("phone")
 	@Produces(MediaType.APPLICATION_JSON)
-	public CardInfo makePhone(@PathParam("cardNumber") String cardNumber)
+	public void makePhone(CardRequest request)
 	{
-		return mapper.map(cardManager.markPhone(cardNumber), CardInfo.class);
+		cardManager.markPhone(request);
 	}
 
 	/**
 	 * <h3>Description</h3>.
 	 * <p>解除冻结</p>
 	 *
-	 * @param cardNumber         the card number
+	 * @param request         the card number
 	 */
 	@PUT
-	@Path("{cardNumber}/unfrozen")
+	@Path("unfrozen")
 	@Produces(MediaType.APPLICATION_JSON)
-	public CardInfo unfrozen(@PathParam("cardNumber") String cardNumber)
+	public void unfrozen(CardRequest request)
 	{
-		return mapper.map(cardManager.unfrozen(cardNumber), CardInfo.class);
+		cardManager.unfrozen(request);
 	}
 
 	/**
 	 * <h3>Description</h3>.
 	 * <p>冻结</p>
 	 *
-	 * @param cardNumber         the card number
+	 * @param request         the card number
 	 */
 	@PUT
-	@Path("{cardNumber}/frozen")
+	@Path("frozen")
 	@Produces(MediaType.APPLICATION_JSON)
-	public CardInfo frozen(@PathParam("cardNumber") String cardNumber)
+	public void frozen(CardRequest request)
 	{
-		return mapper.map(cardManager.frozen(cardNumber), CardInfo.class);
+		cardManager.frozen(request);
 	}
 
 	/**

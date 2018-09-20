@@ -5,6 +5,7 @@ import com.victor.wang.bigCrab.exception.CardNotFoundException;
 import com.victor.wang.bigCrab.exception.base.BadRequestException;
 import com.victor.wang.bigCrab.model.Card;
 import com.victor.wang.bigCrab.sharedObject.CardRedeemRequest;
+import com.victor.wang.bigCrab.sharedObject.CardRequest;
 import com.victor.wang.bigCrab.sharedObject.CardValidateRequest;
 import com.victor.wang.bigCrab.sharedObject.CardStatus;
 import com.victor.wang.bigCrab.util.dao.DaoHelper;
@@ -106,45 +107,65 @@ public class CardManager
 		return cardDao.getCount(queryBuild.toParameter());
 	}
 
-	public Card markPhone(String cardNumber)
+	public void markPhone(CardRequest request)
 	{
-		Card card = this.getCard(cardNumber);
-
-		if (card.getStatus() == CardStatus.PHONED)
+		if (request == null || request.getCardNumbers() == null || request.getCardNumbers().size() == 0)
 		{
-			return card;
+			return;
 		}
-
-		if (card.getStatus() != CardStatus.UNUSED)
+		for (String cardNumber : request.getCardNumbers())
 		{
-			throw new BadRequestException(400, "card_error", "只有未使用的才可标记成电话预约。");
+
+			Card card = this.getCard(cardNumber);
+
+			if (card.getStatus() == CardStatus.PHONED)
+			{
+				continue;
+			}
+
+			if (card.getStatus() != CardStatus.UNUSED)
+			{
+				throw new BadRequestException(400, "card_error", "只有未使用的才可标记成电话预约。");
+			}
+
+			card.setRedeemAt(DateTime.now().toDate());
+			card.setStatus(CardStatus.PHONED);
+			DaoHelper.doUpdate(cardDao, card);
 		}
-		card.setRedeemAt(DateTime.now().toDate());
-		card.setStatus(CardStatus.PHONED);
-		DaoHelper.doUpdate(cardDao, card);
-		return card;
 	}
 
-	public Card unfrozen(String cardNumber)
+	public void unfrozen(CardRequest request)
 	{
-		Card card = this.getCard(cardNumber);
-		if (card.getStatus() != CardStatus.FROZEN)
+		if (request == null || request.getCardNumbers() == null || request.getCardNumbers().size() == 0)
 		{
-			throw new BadRequestException(400, "card_error", "该卡不是冻结状态，无法解除冻结。");
+			return;
 		}
-		card.setStatus(CardStatus.UNUSED);
-		card.setErrorTimes(0);
-		card.setLastErrorAt(null);
-		DaoHelper.doUpdate(cardDao, card);
-		return card;
+		for (String cardNumber : request.getCardNumbers())
+		{
+			Card card = this.getCard(cardNumber);
+			if (card.getStatus() != CardStatus.FROZEN)
+			{
+				throw new BadRequestException(400, "card_error", "该卡不是冻结状态，无法解除冻结。");
+			}
+			card.setStatus(CardStatus.UNUSED);
+			card.setErrorTimes(0);
+			card.setLastErrorAt(null);
+			DaoHelper.doUpdate(cardDao, card);
+		}
 	}
 
-	public Card frozen(String cardNumber)
+	public void frozen(CardRequest request)
 	{
-		Card card = this.getCard(cardNumber);
-		card.setStatus(CardStatus.FROZEN);
-		DaoHelper.doUpdate(cardDao, card);
-		return card;
+		if (request == null || request.getCardNumbers() == null || request.getCardNumbers().size() == 0)
+		{
+			return;
+		}
+		for (String cardNumber : request.getCardNumbers())
+		{
+			Card card = this.getCard(cardNumber);
+			card.setStatus(CardStatus.FROZEN);
+			DaoHelper.doUpdate(cardDao, card);
+		}
 	}
 
 	public Card validate(String cardNumber, @AssertValid CardValidateRequest validateRequest)
@@ -168,7 +189,7 @@ public class CardManager
 				throw new BadRequestException(400, "card_error", "密码错误次数大于5次，已冻结，请联系客服。");
 			}
 			DaoHelper.doUpdate(cardDao, card);
-			throw new BadRequestException(400, "card_error", "卡号或密码不正确，剩余"+(5-card.getErrorTimes())+"次。");
+			throw new BadRequestException(400, "card_error", "卡号或密码不正确，剩余" + (5 - card.getErrorTimes()) + "次。");
 		}
 		if (card.getStatus() == CardStatus.FROZEN)
 		{
