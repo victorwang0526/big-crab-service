@@ -52,19 +52,3 @@ CREATE TABLE t_card
 );
 CREATE UNIQUE INDEX t_card_id_uindex ON t_card (id);
 CREATE UNIQUE INDEX t_card_card_number_uindex ON t_card (card_number);
---
--- CREATE TABLE t_deliver
--- (
---     id NVARCHAR(32) PRIMARY KEY NOT NULL,
---     card_number NVARCHAR(255) NOT NULL,
---     province NVARCHAR(255),
---     city NVARCHAR(255),
---     street NVARCHAR(255),
---     address NVARCHAR(255),
---     status NVARCHAR(32),
---     deliver_at DATETIME,
---     real_deliver_at DATETIME,
---     created_at DATETIME,
---     last_modified_at DATETIME
--- );
--- CREATE UNIQUE INDEX t_deliver_id_uindex ON t_deliver (id);

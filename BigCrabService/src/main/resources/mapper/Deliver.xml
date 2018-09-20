@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.victor.wang.bigCrab.dao.DeliverDao" >
+    <resultMap id="deliverResultMapper" type="com.victor.wang.bigCrab.model.Deliver" >
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="card_number" property="cardNumber" jdbcType="VARCHAR" />
+        <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+        <result column="mailno" property="mailno" jdbcType="VARCHAR" />
+        <result column="d_company" property="dCompany" jdbcType="VARCHAR" />
+        <result column="d_contact" property="dContact" jdbcType="VARCHAR" />
+        <result column="d_tel" property="dTel" jdbcType="VARCHAR" />
+        <result column="d_province" property="dProvince" jdbcType="VARCHAR" />
+        <result column="d_city" property="dCity" jdbcType="VARCHAR" />
+        <result column="d_county" property="dCounty" jdbcType="VARCHAR" />
+        <result column="d_address" property="dAddress" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="deliver_at" property="deliverAt" jdbcType="TIMESTAMP" />
+        <result column="sendstarttime" property="sendstarttime" jdbcType="TIMESTAMP" />
+        <result column="real_deliver_at" property="realDeliverAt" jdbcType="TIMESTAMP" />
+        <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+        <result column="last_modified_at" property="lastModifiedAt" jdbcType="TIMESTAMP" />
+        <result column="rvn" property="rvn" jdbcType="INTEGER" />
+    </resultMap>
+    <sql id="allFields" >
+        id,
+        card_number,
+        order_id,
+        mailno,
+        d_company,
+        d_contact,
+        d_tel,
+        d_province,
+        d_city,
+        d_county,
+        d_address,
+        status,
+        deliver_at,
+        sendstarttime,
+        real_deliver_at,
+        created_at,
+        last_modified_at,
+        rvn
+    </sql>
+
+    <select id="getAll" resultMap="deliverResultMapper">
+        SELECT
+        <include refid="allFields" />
+        FROM t_deliver
+        ORDER BY created_at
+    </select>
+
+    <select id="getCount" parameterType="java.util.HashMap" resultType="int">
+        SELECT COUNT(*) as cnt
+        FROM t_deliver
+        WHERE 1=1
+        <include refid="findDeliversParams"/>
+    </select>
+
+    <select id="get" resultMap="deliverResultMapper" parameterType="String" >
+        SELECT
+        <include refid="allFields" />
+        FROM t_deliver
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="Deliver" >
+        INSERT INTO t_deliver (
+        id,
+        card_number,
+        order_id,
+        mailno,
+        d_company,
+        d_contact,
+        d_tel,
+        d_province,
+        d_city,
+        d_county,
+        d_address,
+        status,
+        deliver_at,
+        sendstarttime,
+        real_deliver_at,
+        created_at,
+        last_modified_at,
+        rvn
+        )
+        VALUES (
+        #{id,jdbcType=VARCHAR},
+        #{cardNumber,jdbcType=VARCHAR},
+        #{orderId,jdbcType=VARCHAR},
+        #{mailno,jdbcType=VARCHAR},
+        #{dCompany,jdbcType=VARCHAR},
+        #{dContact,jdbcType=VARCHAR},
+        #{dTel,jdbcType=VARCHAR},
+        #{dProvince,jdbcType=VARCHAR},
+        #{dCity,jdbcType=VARCHAR},
+        #{dCounty,jdbcType=VARCHAR},
+        #{dAddress,jdbcType=VARCHAR},
+        #{status,jdbcType=VARCHAR},
+        #{deliverAt,jdbcType=TIMESTAMP},
+        #{sendstarttime,jdbcType=TIMESTAMP},
+        #{realDeliverAt,jdbcType=TIMESTAMP},
+        #{createdAt,jdbcType=TIMESTAMP},
+        #{lastModifiedAt,jdbcType=TIMESTAMP},
+        #{rvn,jdbcType=INTEGER}
+        )
+    </insert>
+
+    <update id="update" parameterType="Deliver" >
+        UPDATE t_deliver
+        SET 
+        card_number = #{cardNumber,jdbcType=VARCHAR},
+        order_id = #{orderId,jdbcType=VARCHAR},
+        mailno = #{mailno,jdbcType=VARCHAR},
+        d_company = #{dCompany,jdbcType=VARCHAR},
+        d_contact = #{dContact,jdbcType=VARCHAR},
+        d_tel = #{dTel,jdbcType=VARCHAR},
+        d_province = #{dProvince,jdbcType=VARCHAR},
+        d_city = #{dCity,jdbcType=VARCHAR},
+        d_county = #{dCounty,jdbcType=VARCHAR},
+        d_address = #{dAddress,jdbcType=VARCHAR},
+        status = #{status,jdbcType=VARCHAR},
+        deliver_at = #{deliverAt,jdbcType=TIMESTAMP},
+        sendstarttime = #{sendstarttime,jdbcType=TIMESTAMP},
+        real_deliver_at = #{realDeliverAt,jdbcType=TIMESTAMP},
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+        last_modified_at = getdate(),
+        rvn = rvn+1
+        WHERE id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <sql id="findDeliversParams">
+    </sql>
+    <select id="getList" parameterType="java.util.HashMap" resultMap="deliverResultMapper">
+        SELECT * FROM (
+            SELECT
+            <include refid="allFields" />,
+            ROW_NUMBER()
+            <choose>
+                <when test="orderBy != null">
+                    OVER(Order by ${orderBy} )
+                </when>
+                <otherwise>
+                    OVER(Order by created_at )
+                </otherwise>
+            </choose>
+            AS RowId
+            FROM t_deliver
+            WHERE 1=1
+            <include refid="findDeliversParams"/>
+        ) A
+        WHERE RowId BETWEEN #{pageStart} AND #{pageEnd}
+    </select>
+
+    <delete id="purge">
+        DELETE FROM t_deliver
+    </delete>
+
+    <delete id="delete" parameterType="String">
+        DELETE FROM t_deliver
+        WHERE id = #{id}
+    </delete>
+</mapper>

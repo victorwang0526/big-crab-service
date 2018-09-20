@@ -46,11 +46,11 @@ public class JSMGenerator
 
 		generateModel(modelName, columns);
 		generateDao(modelName, columns);
-//		generateManager(modelName, columns);
+		generateManager(modelName, columns);
 		generateMapper(tableName, modelName, columns);
-//		generateResource(modelName, columns);
-//		generateSharedObject(modelName, columns);
-//		generateException(modelName);
+		generateResource(modelName, columns);
+		generateSharedObject(modelName, columns);
+		generateException(modelName);
 
 	}
 
