@@ -128,72 +128,72 @@ public class Deliver
 		this.mailno = mailno;
 	}
 
-	public String getDCompany()
+	public String getdCompany()
 	{
 		return dCompany;
 	}
 
-	public void setDCompany(String dCompany)
+	public void setdCompany(String dCompany)
 	{
 		this.dCompany = dCompany;
 	}
 
-	public String getDContact()
+	public String getdContact()
 	{
 		return dContact;
 	}
 
-	public void setDContact(String dContact)
+	public void setdContact(String dContact)
 	{
 		this.dContact = dContact;
 	}
 
-	public String getDTel()
+	public String getdTel()
 	{
 		return dTel;
 	}
 
-	public void setDTel(String dTel)
+	public void setdTel(String dTel)
 	{
 		this.dTel = dTel;
 	}
 
-	public String getDProvince()
+	public String getdProvince()
 	{
 		return dProvince;
 	}
 
-	public void setDProvince(String dProvince)
+	public void setdProvince(String dProvince)
 	{
 		this.dProvince = dProvince;
 	}
 
-	public String getDCity()
+	public String getdCity()
 	{
 		return dCity;
 	}
 
-	public void setDCity(String dCity)
+	public void setdCity(String dCity)
 	{
 		this.dCity = dCity;
 	}
 
-	public String getDCounty()
+	public String getdCounty()
 	{
 		return dCounty;
 	}
 
-	public void setDCounty(String dCounty)
+	public void setdCounty(String dCounty)
 	{
 		this.dCounty = dCounty;
 	}
 
-	public String getDAddress()
+	public String getdAddress()
 	{
 		return dAddress;
 	}
 
-	public void setDAddress(String dAddress)
+	public void setdAddress(String dAddress)
 	{
 		this.dAddress = dAddress;
 	}
@@ -247,5 +247,4 @@ public class Deliver
 	{
 		this.receivedAt = receivedAt;
 	}
-
 }

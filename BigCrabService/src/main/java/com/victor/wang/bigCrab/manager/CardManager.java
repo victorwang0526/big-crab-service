@@ -199,9 +199,9 @@ public class CardManager
 		{
 			throw new BadRequestException(400, "card_error", "该卡号已被冻结，请联系客服。");
 		}
-		if (card.getStatus() == CardStatus.UNUSED)
+		if (card.getStatus() != CardStatus.UNUSED)
 		{
-			throw new BadRequestException(400, "card_error", "该卡号已被使用.");
+			throw new BadRequestException(400, "card_error", "该卡号已被兑换.");
 		}
 		return card;
 	}
@@ -218,6 +218,10 @@ public class CardManager
 		deliver.setStatus(DeliverStatus.REDEEMED);
 
 		DaoHelper.insert(deliverDao, deliver);
+
+		card.setStatus(CardStatus.REDEEMED);
+		card.setRedeemAt(new Date());
+		DaoHelper.doUpdate(cardDao, card);
 		return deliver;
 	}
 

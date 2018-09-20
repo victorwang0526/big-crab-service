@@ -12,7 +12,7 @@ spring:
 #      ddl-auto: create
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/bigcrab?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/bigcrab?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false
     username: bigcrab
     password: bigcrab
 mybatis:
