@@ -1,6 +1,6 @@
 package com.victor.wang.bigCrab.model;
 import com.victor.wang.bigCrab.model.base.AuditedMysqlEntity;
-import com.victor.wang.bigCrab.sharedObject.CardStatus;
+import com.victor.wang.bigCrab.sharedObject.lov.CardStatus;
 
 import java.util.Date;
 

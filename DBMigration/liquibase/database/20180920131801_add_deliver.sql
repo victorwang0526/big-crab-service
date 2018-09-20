@@ -16,10 +16,11 @@ CREATE TABLE t_deliver
     d_address NVARCHAR(255) NOT NULL,
 
     status NVARCHAR(32),
-    deliver_at DATETIME,
-    sendstarttime DATETIME,
-    real_deliver_at DATETIME,
-    created_at DATETIME,
+    deliver_at DATETIME,  -- use expected deliver time
+    sendstarttime DATETIME,  -- expect courier arrive time
+    real_deliver_at DATETIME,  -- the cargo real deliver time
+    received_at DATETIME,  -- receiver receive the cargo time
+    created_at DATETIME,   -- can use for redeem at
     last_modified_at DATETIME,
     rvn int
 );

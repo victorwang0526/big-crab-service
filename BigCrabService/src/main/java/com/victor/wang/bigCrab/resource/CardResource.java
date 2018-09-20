@@ -6,7 +6,7 @@ import com.victor.wang.bigCrab.sharedObject.CardInfo;
 import com.victor.wang.bigCrab.sharedObject.CardRedeemRequest;
 import com.victor.wang.bigCrab.sharedObject.CardRequest;
 import com.victor.wang.bigCrab.sharedObject.CardValidateRequest;
-import com.victor.wang.bigCrab.sharedObject.CardStatus;
+import com.victor.wang.bigCrab.sharedObject.lov.CardStatus;
 import com.victor.wang.bigCrab.sharedObject.PaginatedAPIResult;
 import com.victor.wang.bigCrab.util.dao.UniqueString;
 import jersey.repackaged.com.google.common.collect.Lists;

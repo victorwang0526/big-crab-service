@@ -6,10 +6,6 @@ import java.util.Date;
 public class DeliverCreate
 		extends BaseEntity
 {
-	/**
-	 * the cardNumber
-	 */
-	private String cardNumber;
 
 	/**
 	 * the orderId
@@ -57,34 +53,9 @@ public class DeliverCreate
 	private String dAddress;
 
 	/**
-	 * the status
-	 */
-	private String status;
-
-	/**
 	 * the deliverAt
 	 */
 	private Date deliverAt;
-
-	/**
-	 * the sendstarttime
-	 */
-	private Date sendstarttime;
-
-	/**
-	 * the realDeliverAt
-	 */
-	private Date realDeliverAt;
-
-	public String getCardNumber()
-	{
-		return cardNumber;
-	}
-
-	public void setCardNumber(String cardNumber)
-	{
-		this.cardNumber = cardNumber;
-	}
 
 	public String getOrderId()
 	{
@@ -176,16 +147,6 @@ public class DeliverCreate
 		this.dAddress = dAddress;
 	}
 
-	public String getStatus()
-	{
-		return status;
-	}
-
-	public void setStatus(String status)
-	{
-		this.status = status;
-	}
-
 	public Date getDeliverAt()
 	{
 		return deliverAt;
@@ -194,26 +155,6 @@ public class DeliverCreate
 	public void setDeliverAt(Date deliverAt)
 	{
 		this.deliverAt = deliverAt;
-	}
-
-	public Date getSendstarttime()
-	{
-		return sendstarttime;
-	}
-
-	public void setSendstarttime(Date sendstarttime)
-	{
-		this.sendstarttime = sendstarttime;
-	}
-
-	public Date getRealDeliverAt()
-	{
-		return realDeliverAt;
-	}
-
-	public void setRealDeliverAt(Date realDeliverAt)
-	{
-		this.realDeliverAt = realDeliverAt;
 	}
 
 }

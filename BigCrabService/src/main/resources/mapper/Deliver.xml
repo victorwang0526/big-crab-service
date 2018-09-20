@@ -17,6 +17,7 @@
         <result column="deliver_at" property="deliverAt" jdbcType="TIMESTAMP" />
         <result column="sendstarttime" property="sendstarttime" jdbcType="TIMESTAMP" />
         <result column="real_deliver_at" property="realDeliverAt" jdbcType="TIMESTAMP" />
+        <result column="received_at" property="receivedAt" jdbcType="TIMESTAMP" />
         <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
         <result column="last_modified_at" property="lastModifiedAt" jdbcType="TIMESTAMP" />
         <result column="rvn" property="rvn" jdbcType="INTEGER" />
@@ -37,6 +38,7 @@
         deliver_at,
         sendstarttime,
         real_deliver_at,
+        received_at,
         created_at,
         last_modified_at,
         rvn
@@ -80,6 +82,7 @@
         deliver_at,
         sendstarttime,
         real_deliver_at,
+        received_at,
         created_at,
         last_modified_at,
         rvn
@@ -100,6 +103,7 @@
         #{deliverAt,jdbcType=TIMESTAMP},
         #{sendstarttime,jdbcType=TIMESTAMP},
         #{realDeliverAt,jdbcType=TIMESTAMP},
+        #{receivedAt,jdbcType=TIMESTAMP},
         #{createdAt,jdbcType=TIMESTAMP},
         #{lastModifiedAt,jdbcType=TIMESTAMP},
         #{rvn,jdbcType=INTEGER}
@@ -123,6 +127,7 @@
         deliver_at = #{deliverAt,jdbcType=TIMESTAMP},
         sendstarttime = #{sendstarttime,jdbcType=TIMESTAMP},
         real_deliver_at = #{realDeliverAt,jdbcType=TIMESTAMP},
+        received_at = #{receivedAt,jdbcType=TIMESTAMP},
         created_at = #{createdAt,jdbcType=TIMESTAMP},
         last_modified_at = getdate(),
         rvn = rvn+1

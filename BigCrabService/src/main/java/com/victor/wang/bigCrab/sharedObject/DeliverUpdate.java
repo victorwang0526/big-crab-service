@@ -3,13 +3,11 @@ package com.victor.wang.bigCrab.sharedObject;
 import com.victor.wang.bigCrab.model.base.BaseEntity;
 import org.joda.time.DateTime;
 
+import java.util.Date;
+
 public class DeliverUpdate
 		extends BaseEntity
 {
-	/**
-	 * the cardNumber
-	 */
-	private String cardNumber = UNSET_STRING;
 
 	/**
 	 * the orderId
@@ -57,34 +55,9 @@ public class DeliverUpdate
 	private String dAddress = UNSET_STRING;
 
 	/**
-	 * the status
-	 */
-	private String status = UNSET_STRING;
-
-	/**
 	 * the deliverAt
 	 */
-	private Date deliverAt = UNSET_STRING;
-
-	/**
-	 * the sendstarttime
-	 */
-	private Date sendstarttime = UNSET_STRING;
-
-	/**
-	 * the realDeliverAt
-	 */
-	private Date realDeliverAt = UNSET_STRING;
-
-	public String getCardNumber()
-	{
-		return cardNumber;
-	}
-
-	public void setCardNumber(String cardNumber)
-	{
-		this.cardNumber = cardNumber;
-	}
+	private Date deliverAt;
 
 	public String getOrderId()
 	{
@@ -106,84 +79,74 @@ public class DeliverUpdate
 		this.mailno = mailno;
 	}
 
-	public String getDCompany()
+	public String getdCompany()
 	{
 		return dCompany;
 	}
 
-	public void setDCompany(String dCompany)
+	public void setdCompany(String dCompany)
 	{
 		this.dCompany = dCompany;
 	}
 
-	public String getDContact()
+	public String getdContact()
 	{
 		return dContact;
 	}
 
-	public void setDContact(String dContact)
+	public void setdContact(String dContact)
 	{
 		this.dContact = dContact;
 	}
 
-	public String getDTel()
+	public String getdTel()
 	{
 		return dTel;
 	}
 
-	public void setDTel(String dTel)
+	public void setdTel(String dTel)
 	{
 		this.dTel = dTel;
 	}
 
-	public String getDProvince()
+	public String getdProvince()
 	{
 		return dProvince;
 	}
 
-	public void setDProvince(String dProvince)
+	public void setdProvince(String dProvince)
 	{
 		this.dProvince = dProvince;
 	}
 
-	public String getDCity()
+	public String getdCity()
 	{
 		return dCity;
 	}
 
-	public void setDCity(String dCity)
+	public void setdCity(String dCity)
 	{
 		this.dCity = dCity;
 	}
 
-	public String getDCounty()
+	public String getdCounty()
 	{
 		return dCounty;
 	}
 
-	public void setDCounty(String dCounty)
+	public void setdCounty(String dCounty)
 	{
 		this.dCounty = dCounty;
 	}
 
-	public String getDAddress()
+	public String getdAddress()
 	{
 		return dAddress;
 	}
 
-	public void setDAddress(String dAddress)
+	public void setdAddress(String dAddress)
 	{
 		this.dAddress = dAddress;
-	}
-
-	public String getStatus()
-	{
-		return status;
-	}
-
-	public void setStatus(String status)
-	{
-		this.status = status;
 	}
 
 	public Date getDeliverAt()
@@ -195,25 +158,4 @@ public class DeliverUpdate
 	{
 		this.deliverAt = deliverAt;
 	}
-
-	public Date getSendstarttime()
-	{
-		return sendstarttime;
-	}
-
-	public void setSendstarttime(Date sendstarttime)
-	{
-		this.sendstarttime = sendstarttime;
-	}
-
-	public Date getRealDeliverAt()
-	{
-		return realDeliverAt;
-	}
-
-	public void setRealDeliverAt(Date realDeliverAt)
-	{
-		this.realDeliverAt = realDeliverAt;
-	}
-
 }

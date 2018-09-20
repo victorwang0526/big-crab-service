@@ -1,4 +1,4 @@
-package com.victor.wang.bigCrab.sharedObject;
+package com.victor.wang.bigCrab.sharedObject.lov;
 
 public enum CardStatus
 {

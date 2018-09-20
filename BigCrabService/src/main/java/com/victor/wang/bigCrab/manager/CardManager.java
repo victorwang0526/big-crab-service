@@ -4,10 +4,13 @@ import com.victor.wang.bigCrab.dao.CardDao;
 import com.victor.wang.bigCrab.exception.CardNotFoundException;
 import com.victor.wang.bigCrab.exception.base.BadRequestException;
 import com.victor.wang.bigCrab.model.Card;
+import com.victor.wang.bigCrab.model.Deliver;
 import com.victor.wang.bigCrab.sharedObject.CardRedeemRequest;
 import com.victor.wang.bigCrab.sharedObject.CardRequest;
 import com.victor.wang.bigCrab.sharedObject.CardValidateRequest;
-import com.victor.wang.bigCrab.sharedObject.CardStatus;
+import com.victor.wang.bigCrab.sharedObject.lov.CardStatus;
+import com.victor.wang.bigCrab.sharedObject.lov.DeliverStatus;
+import com.victor.wang.bigCrab.util.UniqueString;
 import com.victor.wang.bigCrab.util.dao.DaoHelper;
 import ma.glasnost.orika.MapperFacade;
 import net.sf.oval.constraint.AssertValid;
@@ -19,9 +22,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -204,6 +204,14 @@ public class CardManager
 
 	public Card redeem(String cardNumber, @AssertValid CardRedeemRequest redeemRequest)
 	{
+		CardValidateRequest request = new CardValidateRequest();
+		request.setPassword(redeemRequest.getPassword());
+		//check password
+		Card card = validate(cardNumber, request);
+		Deliver deliver = mapper.map(redeemRequest, Deliver.class);
+		deliver.setCardNumber(cardNumber);
+		deliver.setId(UniqueString.uuidUniqueString());
+		deliver.setStatus(DeliverStatus.REDEEMED);
 		//todo 兑换并发货
 		return null;
 	}

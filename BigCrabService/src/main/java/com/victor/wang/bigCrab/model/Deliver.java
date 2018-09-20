@@ -81,6 +81,11 @@ public class Deliver
 	 */
 	private Date realDeliverAt;
 
+	/**
+	 * 
+	 */
+	private Date receivedAt;
+
 	public String getId()
 	{
 		return id;
@@ -229,6 +234,16 @@ public class Deliver
 	public void setRealDeliverAt(Date realDeliverAt)
 	{
 		this.realDeliverAt = realDeliverAt;
+	}
+
+	public Date getReceivedAt()
+	{
+		return receivedAt;
+	}
+
+	public void setReceivedAt(Date receivedAt)
+	{
+		this.receivedAt = receivedAt;
 	}
 
 }
