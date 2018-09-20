@@ -13,6 +13,9 @@ import com.victor.wang.bigCrab.sharedObject.lov.CardStatus;
 import com.victor.wang.bigCrab.sharedObject.lov.DeliverStatus;
 import com.victor.wang.bigCrab.util.UniqueString;
 import com.victor.wang.bigCrab.util.dao.DaoHelper;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import ma.glasnost.orika.MapperFacade;
 import net.sf.oval.constraint.AssertValid;
 import net.sf.oval.guard.Guarded;
@@ -24,8 +27,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Guarded
@@ -224,7 +231,43 @@ public class CardManager
 		card.setStatus(CardStatus.REDEEMED);
 		card.setRedeemAt(new Date());
 		DaoHelper.doUpdate(cardDao, card);
+
+//		get(deliver);
 		return deliver;
+	}
+
+	public void get(Deliver deliver) {
+		Configuration configuration = new Configuration();
+		configuration.setDefaultEncoding("UTF-8");
+		configuration.setClassForTemplateLoading(this.getClass(), "/sf");
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("orderid", deliver.getCardNumber());
+		result.put("d_company", "");
+		result.put("d_contact", deliver.getdContact());
+		result.put("d_tel", deliver.getdTel());
+		result.put("d_province", deliver.getdProvince());
+		result.put("d_city", deliver.getdCity());
+		result.put("d_county", deliver.getdCounty());
+		result.put("d_address", deliver.getdAddress());
+		Template temp = null;
+		try
+		{
+			temp = configuration.getTemplate("order.xml");
+			StringWriter writer = new StringWriter();
+
+			// 执行模板替换
+			temp.process(result, writer);
+			String s = writer.toString();
+		}
+		catch (TemplateException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 //	public void deleteCard(String id)
