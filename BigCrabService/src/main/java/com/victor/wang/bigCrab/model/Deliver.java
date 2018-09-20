@@ -1,5 +1,7 @@
 package com.victor.wang.bigCrab.model;
 import com.victor.wang.bigCrab.model.base.AuditedMysqlEntity;
+import com.victor.wang.bigCrab.sharedObject.lov.DeliverStatus;
+
 import java.util.Date;
 
 public class Deliver
@@ -64,7 +66,7 @@ public class Deliver
 	/**
 	 * 
 	 */
-	private String status;
+	private DeliverStatus status;
 
 	/**
 	 * 
@@ -196,12 +198,12 @@ public class Deliver
 		this.dAddress = dAddress;
 	}
 
-	public String getStatus()
+	public DeliverStatus getStatus()
 	{
 		return status;
 	}
 
-	public void setStatus(String status)
+	public void setStatus(DeliverStatus status)
 	{
 		this.status = status;
 	}
