@@ -1,7 +1,9 @@
 package com.victor.wang.bigCrab.resource;
 
 import com.victor.wang.bigCrab.manager.CardManager;
+import com.victor.wang.bigCrab.manager.DeliverManager;
 import com.victor.wang.bigCrab.model.Card;
+import com.victor.wang.bigCrab.model.Deliver;
 import com.victor.wang.bigCrab.sharedObject.CardInfo;
 import com.victor.wang.bigCrab.sharedObject.CardRedeemRequest;
 import com.victor.wang.bigCrab.sharedObject.CardRequest;
@@ -48,6 +50,9 @@ public class CardResource
 
 	@Autowired
 	private CardManager cardManager;
+
+	@Autowired
+	private DeliverManager deliverManager;
 
 	@Autowired
 	private MapperFacade mapper;
@@ -125,11 +130,16 @@ public class CardResource
 			@QueryParam("page") @DefaultValue("1") int page,
 			@QueryParam("size") @DefaultValue("10") int size)
 	{
-		return new PaginatedAPIResult<>(
+		PaginatedAPIResult<CardInfo> result = new PaginatedAPIResult<CardInfo>(
 				mapper.mapAsList(cardManager.findCards(cardNumber, status, page, size), CardInfo.class),
 				page,
 				size,
 				cardManager.countCards(cardNumber, status));
+
+		for(CardInfo card: result.getElements()) {
+			card.setDeliverInfo(mapper.map(deliverManager.getDeliverByCardNumber(card.getCardNumber()), DeliverInfo.class));
+		}
+		return result;
 	}
 
 	/**

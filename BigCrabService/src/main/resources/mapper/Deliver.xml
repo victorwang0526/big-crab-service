@@ -65,6 +65,13 @@
         WHERE id = #{id}
     </select>
 
+    <select id="getByCardNumber" resultMap="deliverResultMapper" parameterType="java.util.HashMap" >
+        SELECT
+        <include refid="allFields" />
+        FROM t_deliver
+        WHERE card_number = #{cardNumber}
+    </select>
+
     <insert id="insert" parameterType="Deliver" >
         INSERT INTO t_deliver (
         id,

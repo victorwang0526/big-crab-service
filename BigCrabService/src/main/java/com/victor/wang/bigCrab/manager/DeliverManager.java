@@ -41,6 +41,10 @@ public class DeliverManager
 		return deliver;
 	}
 
+	public Deliver getDeliverByCardNumber(String cardNumber){
+		return deliverDao.getByCardNumber(cardNumber);
+	}
+
 	public Deliver createDeliver(@AssertValid DeliverCreate deliverCreate)
 	{
 		LOGGER.info("DeliverManager, createDeliver; deliverCreate: {}", deliverCreate);

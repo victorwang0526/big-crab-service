@@ -57,6 +57,8 @@ public class CardInfo
 	 */
 	private Date lastModifiedAt;
 
+	private DeliverInfo deliverInfo;
+
 	public String getId()
 	{
 		return id;
@@ -157,4 +159,13 @@ public class CardInfo
 		this.lastModifiedAt = lastModifiedAt;
 	}
 
+	public DeliverInfo getDeliverInfo()
+	{
+		return deliverInfo;
+	}
+
+	public void setDeliverInfo(DeliverInfo deliverInfo)
+	{
+		this.deliverInfo = deliverInfo;
+	}
 }
