@@ -18,6 +18,11 @@ public class CardInfo
 	private String cardNumber;
 
 	/**
+	 * card type
+	 */
+	private String cardType;
+
+	/**
 	 * the status
 	 */
 	private String status;
@@ -167,5 +172,15 @@ public class CardInfo
 	public void setDeliverInfo(DeliverInfo deliverInfo)
 	{
 		this.deliverInfo = deliverInfo;
+	}
+
+	public String getCardType()
+	{
+		return cardType;
+	}
+
+	public void setCardType(String cardType)
+	{
+		this.cardType = cardType;
 	}
 }

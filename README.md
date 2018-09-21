@@ -23,13 +23,6 @@ http://localhost:8090/carrot
 
 ### war
 
-```
-gradle war
-```
+> https://qiao.sf-express.com/pages/developDoc/index.html?level2=296618&level3=902583&level4=763554
 
-### code style
-IDEA - File - Import Settings... codestyle.jar
-
-### swagger ui
-use swagger-ui-2.0.24.dist.zip
 
