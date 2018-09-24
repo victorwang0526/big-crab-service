@@ -223,15 +223,15 @@ public class CardResource
 	 * <h3>Description</h3>.
 	 * <p>顺丰下单</p>
 	 *
-	 * @param cardNumber the card number
+	 * @param request the card number
 	 */
 	@POST
-	@Path("{cardNumber}/sfOrder")
+	@Path("sfOrder")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public void sfGetOrder(@PathParam("cardNumber") String cardNumber)
+	public void sfGetOrder(CardRequest request)
 	{
-		deliverManager.sfOrder(cardNumber);
+		deliverManager.sfOrder(request);
 	}
 
 

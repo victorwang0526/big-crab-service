@@ -5,6 +5,7 @@ import com.victor.wang.bigCrab.exception.DeliverNotFoundException;
 import com.victor.wang.bigCrab.exception.base.BadRequestException;
 import com.victor.wang.bigCrab.model.Card;
 import com.victor.wang.bigCrab.model.Deliver;
+import com.victor.wang.bigCrab.sharedObject.CardRequest;
 import com.victor.wang.bigCrab.sharedObject.DeliverCreate;
 import com.victor.wang.bigCrab.sharedObject.DeliverUpdate;
 import com.victor.wang.bigCrab.sharedObject.lov.CardStatus;
@@ -18,6 +19,7 @@ import freemarker.template.TemplateException;
 import ma.glasnost.orika.MapperFacade;
 import net.sf.oval.constraint.AssertValid;
 import net.sf.oval.guard.Guarded;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,47 +116,67 @@ public class DeliverManager
 		deliverDao.delete(id);
 	}
 
-	public void sfOrder(String cardNumber)
+	public void sfOrder(CardRequest request)
 	{
-		Card card = cardManager.getCard(cardNumber);
-		if(card.getStatus() == CardStatus.UNUSED){
-			throw new BadRequestException(400, "status_error", "未使用的卡号");
-		}
-		if(card.getStatus() == CardStatus.PHONED){
-			throw new BadRequestException(400, "status_error", "已电话预约");
-		}
-		if(card.getStatus() == CardStatus.FROZEN){
-			throw new BadRequestException(400, "status_error", "已冻结");
-		}
-		if(card.getStatus() == CardStatus.DELIVERED){
-			throw new BadRequestException(400, "status_error", "已发货");
-		}
-		if(card.getStatus() == CardStatus.RECEIVED){
-			throw new BadRequestException(400, "status_error", "已收货");
-		}
-		Deliver deliver = deliverDao.getByCardNumber(cardNumber);
-		if (deliver == null)
+		StringBuilder errorMsg = new StringBuilder();
+		for (String cardNumber : request.getCardNumbers())
 		{
-			throw new BadRequestException(400, "deliver_not_found", "无运单信息，无法发货。");
+			Card card = cardManager.getCard(cardNumber);
+			if (card.getStatus() == CardStatus.UNUSED)
+			{
+				errorMsg.append("未使用的卡号[").append(cardNumber).append("], ");
+				continue;
+			}
+			if (card.getStatus() == CardStatus.PHONED)
+			{
+				errorMsg.append("已电话预约[").append(cardNumber).append("], ");
+				continue;
+			}
+			if (card.getStatus() == CardStatus.FROZEN)
+			{
+				errorMsg.append("已冻结[").append(cardNumber).append("], ");
+				continue;
+			}
+			if (card.getStatus() == CardStatus.DELIVERED)
+			{
+				errorMsg.append("已发货[").append(cardNumber).append("], ");
+				continue;
+			}
+			if (card.getStatus() == CardStatus.RECEIVED)
+			{
+				errorMsg.append("已收货[").append(cardNumber).append("], ");
+				continue;
+			}
+			Deliver deliver = deliverDao.getByCardNumber(cardNumber);
+			if (deliver == null)
+			{
+				errorMsg.append("无运单信息，无法发货。[").append(cardNumber).append("], ");
+				continue;
+			}
+			CallExpressServiceTools client = CallExpressServiceTools.getInstance();
+
+			String respXml = client.callSfExpressServiceByCSIM(sfUrl,
+					getRequest(deliver, "order.xml"), clientCode, checkWord);
+
+			Document document = XmlUtils.stringTOXml(respXml);
+			String responseCode = XmlUtils.getNodeValue(document, "Response/Head");
+			if (responseCode.equals("ERR"))
+			{
+				String responseMsg = XmlUtils.getNodeValue(document, "Response/ERROR");
+				throw new BadRequestException(400, "sf_error", responseMsg);
+			}
+			String mailno = XmlUtils.getValue(document, "mailno");
+			deliver.setMailno(mailno);
+			DaoHelper.doUpdate(deliverDao, deliver);
 		}
-		CallExpressServiceTools client = CallExpressServiceTools.getInstance();
-
-		String respXml = client.callSfExpressServiceByCSIM(sfUrl,
-				getRequest(deliver, "order.xml"), clientCode, checkWord);
-
-		Document document = XmlUtils.stringTOXml(respXml);
-		String responseCode = XmlUtils.getNodeValue(document, "Response/Head");
-		if (responseCode.equals("ERR"))
+		if (StringUtils.isBlank(errorMsg.toString()))
 		{
-			String responseMsg = XmlUtils.getNodeValue(document, "Response/ERROR");
-			throw new BadRequestException(400, "sf_error", responseMsg);
+			throw new BadRequestException(400, "deliver_not_found", errorMsg.toString());
 		}
-		String mailno = XmlUtils.getValue(document, "mailno");
-		deliver.setMailno(mailno);
-		DaoHelper.doUpdate(deliverDao, deliver);
 	}
 
-	public void sfGetOrder(String cardNumber){
+	public void sfGetOrder(String cardNumber)
+	{
 		Deliver deliver = deliverDao.getByCardNumber(cardNumber);
 		if (deliver == null)
 		{
