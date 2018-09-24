@@ -2,20 +2,37 @@ package com.victor.wang.bigCrab.manager;
 
 import com.victor.wang.bigCrab.dao.DeliverDao;
 import com.victor.wang.bigCrab.exception.DeliverNotFoundException;
+import com.victor.wang.bigCrab.exception.base.BadRequestException;
 import com.victor.wang.bigCrab.model.Deliver;
 import com.victor.wang.bigCrab.sharedObject.DeliverCreate;
 import com.victor.wang.bigCrab.sharedObject.DeliverUpdate;
 import com.victor.wang.bigCrab.util.UniqueString;
 import com.victor.wang.bigCrab.util.dao.DaoHelper;
+import com.victor.wang.bigCrab.util.sf.CallExpressServiceTools;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import ma.glasnost.orika.MapperFacade;
 import net.sf.oval.constraint.AssertValid;
 import net.sf.oval.guard.Guarded;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Guarded
@@ -29,6 +46,13 @@ public class DeliverManager
 	@Autowired
 	private MapperFacade mapper;
 
+	@Value("${sf.clientCode}")
+	private String clientCode;
+
+	@Value("${sf.checkWord}")
+	private String checkWord;
+
+
 	public Deliver getDeliver(String id)
 	{
 		LOGGER.debug("DeliverManager, getDeliver; id: {}", id);
@@ -41,7 +65,8 @@ public class DeliverManager
 		return deliver;
 	}
 
-	public Deliver getDeliverByCardNumber(String cardNumber){
+	public Deliver getDeliverByCardNumber(String cardNumber)
+	{
 		return deliverDao.getByCardNumber(cardNumber);
 	}
 
@@ -66,7 +91,7 @@ public class DeliverManager
 			int page,
 			int size)
 	{
-		LOGGER.debug("DeliverManager, findDeliver; page: {}, size: {}",  page, size);
+		LOGGER.debug("DeliverManager, findDeliver; page: {}, size: {}", page, size);
 		DeliverDao.DeliverQueryBuild queryBuild = DeliverDao.DeliverQueryBuild.build()
 				.pagination(page, size);
 		return deliverDao.getList(queryBuild.toParameter());
@@ -84,5 +109,110 @@ public class DeliverManager
 		LOGGER.info("DeliverManager, deleteDeliver; id: {}", id);
 		getDeliver(id);
 		deliverDao.delete(id);
+	}
+
+	public void sfOrder(String cardNumber)
+	{
+
+		Deliver deliver = deliverDao.getByCardNumber(cardNumber);
+		if (deliver == null)
+		{
+			throw new BadRequestException(400, "deliver_not_found", "未找到该卡号");
+		}
+		CallExpressServiceTools client = CallExpressServiceTools.getInstance();
+
+		String respXml = client.callSfExpressServiceByCSIM("http://bsp-oisp.sf-express.com/bsp-oisp/sfexpressService",
+				getRequest(deliver), clientCode, checkWord);
+
+		Document document = stringTOXml(respXml);
+		String responseCode = getNodeValue(document, "Response/Head");
+		if (responseCode.equals("ERR"))
+		{
+			String responseMsg = getNodeValue(document, "Response/ERROR");
+			throw new BadRequestException(400, "sf_error", responseMsg);
+		}
+		int i = 0;
+	}
+
+
+	/**
+	 * @param document
+	 * @return 某个节点的值 前提是需要知道xml格式，知道需要取的节点相对根节点所在位置
+	 */
+	public String getNodeValue(Document document, String nodePaht)
+	{
+		XPathFactory xpfactory = XPathFactory.newInstance();
+		XPath path = xpfactory.newXPath();
+		String servInitrBrch = "";
+		try
+		{
+			servInitrBrch = path.evaluate(nodePaht, document);
+		}
+		catch (XPathExpressionException e)
+		{
+			e.printStackTrace();
+		}
+		return servInitrBrch;
+	}
+
+	/**
+	 * @param str xml形状的str串
+	 * @return Document 对象
+	 */
+	public Document stringTOXml(String str)
+	{
+
+		StringBuilder sXML = new StringBuilder();
+		sXML.append(str);
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		Document doc = null;
+		try
+		{
+			InputStream is = new ByteArrayInputStream(sXML.toString().getBytes("utf-8"));
+			doc = dbf.newDocumentBuilder().parse(is);
+			is.close();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return doc;
+	}
+
+	public String getRequest(Deliver deliver)
+	{
+		Configuration configuration = new Configuration();
+		configuration.setDefaultEncoding("UTF-8");
+		configuration.setClassForTemplateLoading(this.getClass(), "/sf");
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("clientCode", clientCode);
+		result.put("orderid", deliver.getCardNumber());
+		result.put("d_company", "");
+		result.put("d_contact", deliver.getdContact());
+		result.put("d_tel", deliver.getdTel());
+		result.put("d_province", deliver.getdProvince());
+		result.put("d_city", deliver.getdCity());
+		result.put("d_county", deliver.getdCounty());
+		result.put("d_address", deliver.getdAddress());
+		Template temp = null;
+		try
+		{
+			temp = configuration.getTemplate("order.xml");
+			StringWriter writer = new StringWriter();
+
+			// 执行模板替换
+			temp.process(result, writer);
+			return writer.toString();
+		}
+		catch (TemplateException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		return "";
 	}
 }

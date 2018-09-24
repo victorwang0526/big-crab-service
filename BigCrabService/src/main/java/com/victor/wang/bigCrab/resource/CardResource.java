@@ -136,7 +136,8 @@ public class CardResource
 				size,
 				cardManager.countCards(cardNumber, status));
 
-		for(CardInfo card: result.getElements()) {
+		for (CardInfo card : result.getElements())
+		{
 			card.setDeliverInfo(mapper.map(deliverManager.getDeliverByCardNumber(card.getCardNumber()), DeliverInfo.class));
 		}
 		return result;
@@ -215,6 +216,22 @@ public class CardResource
 							  CardRedeemRequest redeemRequest)
 	{
 		return mapper.map(cardManager.redeem(cardNumber, redeemRequest), DeliverInfo.class);
+	}
+
+
+	/**
+	 * <h3>Description</h3>.
+	 * <p>顺丰下单</p>
+	 *
+	 * @param cardNumber the card number
+	 */
+	@POST
+	@Path("{cardNumber}/sfOrder")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public void sfOrder(@PathParam("cardNumber") String cardNumber)
+	{
+		deliverManager.sfOrder(cardNumber);
 	}
 
 

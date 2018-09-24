@@ -18,3 +18,8 @@ spring:
 mybatis:
   typeAliasesPackage: com.victor.wang.bigCrab.model
   mapperLocations: classpath:mapper/*.xml
+
+sf:
+  clientCode: WFX_a1uDS
+  checkWord: 2PwIcTrKG92tyWYCcNmgJtwV4boJRDVe
+  custid: 7551234567

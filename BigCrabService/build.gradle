@@ -75,6 +75,16 @@ dependencies {
     /**
      *  see info to https://github.com/victorwang0526/swagger-doclet
      */
+
+// https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.3.4'
+// https://mvnrepository.com/artifact/org.apache.httpcomponents/httpcore
+    compile group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.3.2'
+
+    // https://mvnrepository.com/artifact/xml-apis/xml-apis
+    compile group: 'xml-apis', name: 'xml-apis', version: '2.0.2'
+
+
     doclet(
             [group: 'com.tenxerconsulting', name: 'swagger-doclet', version: '1.0.7'],
             [group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0']
