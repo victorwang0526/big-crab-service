@@ -8,7 +8,19 @@ import java.util.List;
 public class SfOrderSearchResponse
 		extends BaseEntity
 {
+	DeliverInfo deliverInfo;
+
 	List<SfRoute> routes = new ArrayList<>();
+
+	public DeliverInfo getDeliverInfo()
+	{
+		return deliverInfo;
+	}
+
+	public void setDeliverInfo(DeliverInfo deliverInfo)
+	{
+		this.deliverInfo = deliverInfo;
+	}
 
 	public List<SfRoute> getRoutes()
 	{

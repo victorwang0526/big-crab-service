@@ -7,6 +7,7 @@ import com.victor.wang.bigCrab.model.Card;
 import com.victor.wang.bigCrab.model.Deliver;
 import com.victor.wang.bigCrab.sharedObject.CardRequest;
 import com.victor.wang.bigCrab.sharedObject.DeliverCreate;
+import com.victor.wang.bigCrab.sharedObject.DeliverInfo;
 import com.victor.wang.bigCrab.sharedObject.DeliverUpdate;
 import com.victor.wang.bigCrab.sharedObject.SfOrderSearchResponse;
 import com.victor.wang.bigCrab.sharedObject.SfRoute;
@@ -260,7 +261,7 @@ public class DeliverManager
 		}
 
 		SfOrderSearchResponse response = new SfOrderSearchResponse();
-
+		response.setDeliverInfo(mapper.map(deliver, DeliverInfo.class));
 
 		if (deliver.getMailno().equals("755123456789"))
 		{
