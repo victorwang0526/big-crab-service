@@ -263,8 +263,7 @@ public class CardResource
 	@Produces(MediaType.APPLICATION_JSON)
 	public SfOrderSearchResponse sfGetOrder(@PathParam("cardNumber") String cardNumber)
 	{
-		deliverManager.sfGetOrder(cardNumber);
-		return new SfOrderSearchResponse();
+		return deliverManager.sfGetOrder(cardNumber);
 	}
 
 

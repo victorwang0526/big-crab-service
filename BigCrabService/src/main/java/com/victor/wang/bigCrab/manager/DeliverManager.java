@@ -8,6 +8,8 @@ import com.victor.wang.bigCrab.model.Deliver;
 import com.victor.wang.bigCrab.sharedObject.CardRequest;
 import com.victor.wang.bigCrab.sharedObject.DeliverCreate;
 import com.victor.wang.bigCrab.sharedObject.DeliverUpdate;
+import com.victor.wang.bigCrab.sharedObject.SfOrderSearchResponse;
+import com.victor.wang.bigCrab.sharedObject.SfRoute;
 import com.victor.wang.bigCrab.sharedObject.lov.CardStatus;
 import com.victor.wang.bigCrab.sharedObject.lov.DeliverStatus;
 import com.victor.wang.bigCrab.util.UniqueString;
@@ -27,6 +29,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -118,7 +122,8 @@ public class DeliverManager
 		deliverDao.delete(id);
 	}
 
-	public void sfOrderSelf(String cardNumber, String mailno){
+	public void sfOrderSelf(String cardNumber, String mailno)
+	{
 		Card card = cardManager.getCard(cardNumber);
 		if (card.getStatus() == CardStatus.UNUSED)
 		{
@@ -192,8 +197,19 @@ public class DeliverManager
 			}
 			CallExpressServiceTools client = CallExpressServiceTools.getInstance();
 
+			Map<String, Object> result = new HashMap<String, Object>();
+			result.put("clientCode", clientCode);
+			result.put("orderid", deliver.getCardNumber());
+			result.put("d_company", "");
+			result.put("d_contact", deliver.getdContact());
+			result.put("d_tel", deliver.getdTel());
+			result.put("d_province", deliver.getdProvince());
+			result.put("d_city", deliver.getdCity());
+			result.put("d_county", deliver.getdCounty());
+			result.put("d_address", deliver.getdAddress());
+
 			String respXml = client.callSfExpressServiceByCSIM(sfUrl,
-					getRequest(deliver, "order.xml"), clientCode, checkWord);
+					getRequest(result, "order.xml"), clientCode, checkWord);
 
 			Document document = XmlUtils.stringTOXml(respXml);
 			String responseCode = XmlUtils.getNodeValue(document, "Response/Head");
@@ -212,21 +228,29 @@ public class DeliverManager
 		}
 		if (StringUtils.isNoneBlank(errorMsg.toString()))
 		{
-			throw new BadRequestException(400, "deliver_not_found", errorMsg.toString().substring(0, errorMsg.toString().length()-2));
+			throw new BadRequestException(400, "deliver_not_found", errorMsg.toString().substring(0, errorMsg.toString().length() - 2));
 		}
 	}
 
-	public void sfGetOrder(String cardNumber)
+	public SfOrderSearchResponse sfGetOrder(String cardNumber)
 	{
 		Deliver deliver = deliverDao.getByCardNumber(cardNumber);
 		if (deliver == null)
 		{
 			throw new BadRequestException(400, "deliver_not_found", "未找到该卡号");
 		}
+		if (StringUtils.isBlank(deliver.getMailno()))
+		{
+			throw new BadRequestException(400, "deliver_not_found", "运单号不存在");
+		}
 		CallExpressServiceTools client = CallExpressServiceTools.getInstance();
 
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("clientCode", clientCode);
+		result.put("mailno", deliver.getMailno());
+
 		String respXml = client.callSfExpressServiceByCSIM(sfUrl,
-				getRequest(deliver, "search.xml"), clientCode, checkWord);
+				getRequest(result, "route.xml"), clientCode, checkWord);
 		Document document = XmlUtils.stringTOXml(respXml);
 		String responseCode = XmlUtils.getNodeValue(document, "Response/Head");
 		if (responseCode.equals("ERR"))
@@ -234,24 +258,46 @@ public class DeliverManager
 			String responseMsg = XmlUtils.getNodeValue(document, "Response/ERROR");
 			throw new BadRequestException(400, "sf_error", responseMsg);
 		}
+
+		SfOrderSearchResponse response = new SfOrderSearchResponse();
+
+
+		if (deliver.getMailno().equals("755123456789"))
+		{
+			for (int i = 1; i < 10; i++)
+			{
+				SfRoute route = new SfRoute();
+				route.setAcceptTime("2018-09-0" + i + " 08:01:22");
+				route.setAcceptAddress("地址1");
+				route.setRemark("已收件");
+				route.setOpcode("50");
+				response.getRoutes().add(route);
+			}
+			return response;
+		}
+		NodeList booklist = document.getElementsByTagName("Route");
+		if (booklist != null && booklist.getLength() > 0)
+		{
+			for (int i = 0; i < booklist.getLength(); i++)
+			{
+				SfRoute route = new SfRoute();
+				Node node = booklist.item(i);
+				route.setAcceptTime(node.getAttributes().getNamedItem("accept_time").getNodeValue());
+				route.setAcceptTime(node.getAttributes().getNamedItem("accept_address").getNodeValue());
+				route.setAcceptTime(node.getAttributes().getNamedItem("remark").getNodeValue());
+				route.setAcceptTime(node.getAttributes().getNamedItem("opcode").getNodeValue());
+				response.getRoutes().add(route);
+			}
+		}
+		return response;
 	}
 
-	public String getRequest(Deliver deliver, String template)
+	public String getRequest(Map<String, Object> result, String template)
 	{
 		Configuration configuration = new Configuration();
 		configuration.setDefaultEncoding("UTF-8");
 		configuration.setClassForTemplateLoading(this.getClass(), "/sf");
 
-		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("clientCode", clientCode);
-		result.put("orderid", deliver.getCardNumber());
-		result.put("d_company", "");
-		result.put("d_contact", deliver.getdContact());
-		result.put("d_tel", deliver.getdTel());
-		result.put("d_province", deliver.getdProvince());
-		result.put("d_city", deliver.getdCity());
-		result.put("d_county", deliver.getdCounty());
-		result.put("d_address", deliver.getdAddress());
 		Template temp = null;
 		try
 		{
