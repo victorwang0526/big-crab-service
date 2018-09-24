@@ -29,7 +29,7 @@ public class CallExpressServiceTools
 		return result;
 	}
 
-	public static String querySFAPIservice(String url, String xml, String verifyCode) {
+	private static String querySFAPIservice(String url, String xml, String verifyCode) {
 		HttpClientUtil httpclient = new HttpClientUtil();
 		if (url == null) {
 			url = "http://bsp-oisp.sf-express.com/bsp-oisp/sfexpressService";

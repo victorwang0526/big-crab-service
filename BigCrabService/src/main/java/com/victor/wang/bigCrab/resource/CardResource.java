@@ -229,9 +229,25 @@ public class CardResource
 	@Path("{cardNumber}/sfOrder")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public void sfOrder(@PathParam("cardNumber") String cardNumber)
+	public void sfGetOrder(@PathParam("cardNumber") String cardNumber)
 	{
 		deliverManager.sfOrder(cardNumber);
+	}
+
+
+	/**
+	 * <h3>Description</h3>.
+	 * <p>顺丰，查询订单状态</p>
+	 *
+	 * @param cardNumber the card number
+	 */
+	@GET
+	@Path("{cardNumber}/sfOrder")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public void sfOrder(@PathParam("cardNumber") String cardNumber)
+	{
+		deliverManager.sfGetOrder(cardNumber);
 	}
 
 

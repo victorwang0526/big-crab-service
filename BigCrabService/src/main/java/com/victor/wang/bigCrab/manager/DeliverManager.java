@@ -7,6 +7,7 @@ import com.victor.wang.bigCrab.model.Deliver;
 import com.victor.wang.bigCrab.sharedObject.DeliverCreate;
 import com.victor.wang.bigCrab.sharedObject.DeliverUpdate;
 import com.victor.wang.bigCrab.util.UniqueString;
+import com.victor.wang.bigCrab.util.XmlUtils;
 import com.victor.wang.bigCrab.util.dao.DaoHelper;
 import com.victor.wang.bigCrab.util.sf.CallExpressServiceTools;
 import freemarker.template.Configuration;
@@ -22,13 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +46,9 @@ public class DeliverManager
 
 	@Value("${sf.checkWord}")
 	private String checkWord;
+
+	@Value("${sf.url}")
+	private String sfUrl;
 
 
 	public Deliver getDeliver(String id)
@@ -121,65 +119,40 @@ public class DeliverManager
 		}
 		CallExpressServiceTools client = CallExpressServiceTools.getInstance();
 
-		String respXml = client.callSfExpressServiceByCSIM("http://bsp-oisp.sf-express.com/bsp-oisp/sfexpressService",
-				getRequest(deliver), clientCode, checkWord);
+		String respXml = client.callSfExpressServiceByCSIM(sfUrl,
+				getRequest(deliver, "order.xml"), clientCode, checkWord);
 
-		Document document = stringTOXml(respXml);
-		String responseCode = getNodeValue(document, "Response/Head");
+		Document document = XmlUtils.stringTOXml(respXml);
+		String responseCode = XmlUtils.getNodeValue(document, "Response/Head");
 		if (responseCode.equals("ERR"))
 		{
-			String responseMsg = getNodeValue(document, "Response/ERROR");
+			String responseMsg = XmlUtils.getNodeValue(document, "Response/ERROR");
 			throw new BadRequestException(400, "sf_error", responseMsg);
 		}
-		int i = 0;
+	}
+
+	public void sfGetOrder(String cardNumber){
+		Deliver deliver = deliverDao.getByCardNumber(cardNumber);
+		if (deliver == null)
+		{
+			throw new BadRequestException(400, "deliver_not_found", "未找到该卡号");
+		}
+		CallExpressServiceTools client = CallExpressServiceTools.getInstance();
+
+		String respXml = client.callSfExpressServiceByCSIM(sfUrl,
+				getRequest(deliver, "search.xml"), clientCode, checkWord);
+		Document document = XmlUtils.stringTOXml(respXml);
+		String responseCode = XmlUtils.getNodeValue(document, "Response/Head");
+		if (responseCode.equals("ERR"))
+		{
+			String responseMsg = XmlUtils.getNodeValue(document, "Response/ERROR");
+			throw new BadRequestException(400, "sf_error", responseMsg);
+		}
 	}
 
 
-	/**
-	 * @param document
-	 * @return 某个节点的值 前提是需要知道xml格式，知道需要取的节点相对根节点所在位置
-	 */
-	public String getNodeValue(Document document, String nodePaht)
-	{
-		XPathFactory xpfactory = XPathFactory.newInstance();
-		XPath path = xpfactory.newXPath();
-		String servInitrBrch = "";
-		try
-		{
-			servInitrBrch = path.evaluate(nodePaht, document);
-		}
-		catch (XPathExpressionException e)
-		{
-			e.printStackTrace();
-		}
-		return servInitrBrch;
-	}
 
-	/**
-	 * @param str xml形状的str串
-	 * @return Document 对象
-	 */
-	public Document stringTOXml(String str)
-	{
-
-		StringBuilder sXML = new StringBuilder();
-		sXML.append(str);
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		Document doc = null;
-		try
-		{
-			InputStream is = new ByteArrayInputStream(sXML.toString().getBytes("utf-8"));
-			doc = dbf.newDocumentBuilder().parse(is);
-			is.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		return doc;
-	}
-
-	public String getRequest(Deliver deliver)
+	public String getRequest(Deliver deliver, String template)
 	{
 		Configuration configuration = new Configuration();
 		configuration.setDefaultEncoding("UTF-8");
@@ -198,7 +171,7 @@ public class DeliverManager
 		Template temp = null;
 		try
 		{
-			temp = configuration.getTemplate("order.xml");
+			temp = configuration.getTemplate(template);
 			StringWriter writer = new StringWriter();
 
 			// 执行模板替换
