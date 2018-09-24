@@ -168,6 +168,8 @@ public class DeliverManager
 			String mailno = XmlUtils.getValue(document, "mailno");
 			deliver.setMailno(mailno);
 			DaoHelper.doUpdate(deliverDao, deliver);
+
+			cardManager.delive(card);
 		}
 		if (StringUtils.isBlank(errorMsg.toString()))
 		{

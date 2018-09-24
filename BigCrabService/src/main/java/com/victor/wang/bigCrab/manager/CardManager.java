@@ -236,6 +236,14 @@ public class CardManager
 		return deliver;
 	}
 
+	public Card delive(Card card){
+		if(card == null){
+			return null;
+		}
+		card.setStatus(CardStatus.DELIVERED);
+		DaoHelper.doUpdate(cardDao, card);
+		return card;
+	}
 
 
 //	public void deleteCard(String id)
