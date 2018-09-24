@@ -111,7 +111,6 @@ public class DeliverManager
 
 	public void sfOrder(String cardNumber)
 	{
-
 		Deliver deliver = deliverDao.getByCardNumber(cardNumber);
 		if (deliver == null)
 		{
@@ -129,6 +128,9 @@ public class DeliverManager
 			String responseMsg = XmlUtils.getNodeValue(document, "Response/ERROR");
 			throw new BadRequestException(400, "sf_error", responseMsg);
 		}
+		String mailno = XmlUtils.getValue(document, "mailno");
+		deliver.setMailno(mailno);
+		DaoHelper.doUpdate(deliverDao, deliver);
 	}
 
 	public void sfGetOrder(String cardNumber){
@@ -149,8 +151,6 @@ public class DeliverManager
 			throw new BadRequestException(400, "sf_error", responseMsg);
 		}
 	}
-
-
 
 	public String getRequest(Deliver deliver, String template)
 	{

@@ -1,6 +1,7 @@
 package com.victor.wang.bigCrab.util;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
@@ -12,6 +13,13 @@ import java.io.InputStream;
 public class XmlUtils
 {
 
+	public static String getValue(Document document, String nodeName) {
+		NodeList booklist = document.getElementsByTagName("OrderResponse");
+		if(booklist == null || booklist.getLength() == 0){
+			return null;
+		}
+		return booklist.item(0).getAttributes().getNamedItem(nodeName).getNodeValue();
+	}
 
 	/**
 	 * @param document
