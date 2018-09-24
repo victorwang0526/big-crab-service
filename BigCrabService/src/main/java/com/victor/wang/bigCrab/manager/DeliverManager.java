@@ -3,9 +3,11 @@ package com.victor.wang.bigCrab.manager;
 import com.victor.wang.bigCrab.dao.DeliverDao;
 import com.victor.wang.bigCrab.exception.DeliverNotFoundException;
 import com.victor.wang.bigCrab.exception.base.BadRequestException;
+import com.victor.wang.bigCrab.model.Card;
 import com.victor.wang.bigCrab.model.Deliver;
 import com.victor.wang.bigCrab.sharedObject.DeliverCreate;
 import com.victor.wang.bigCrab.sharedObject.DeliverUpdate;
+import com.victor.wang.bigCrab.sharedObject.lov.CardStatus;
 import com.victor.wang.bigCrab.util.UniqueString;
 import com.victor.wang.bigCrab.util.XmlUtils;
 import com.victor.wang.bigCrab.util.dao.DaoHelper;
@@ -37,6 +39,9 @@ public class DeliverManager
 
 	@Autowired
 	DeliverDao deliverDao;
+
+	@Autowired
+	CardManager cardManager;
 
 	@Autowired
 	private MapperFacade mapper;
@@ -111,10 +116,26 @@ public class DeliverManager
 
 	public void sfOrder(String cardNumber)
 	{
+		Card card = cardManager.getCard(cardNumber);
+		if(card.getStatus() == CardStatus.UNUSED){
+			throw new BadRequestException(400, "status_error", "未使用的卡号");
+		}
+		if(card.getStatus() == CardStatus.PHONED){
+			throw new BadRequestException(400, "status_error", "已电话预约");
+		}
+		if(card.getStatus() == CardStatus.FROZEN){
+			throw new BadRequestException(400, "status_error", "已冻结");
+		}
+		if(card.getStatus() == CardStatus.DELIVERED){
+			throw new BadRequestException(400, "status_error", "已发货");
+		}
+		if(card.getStatus() == CardStatus.RECEIVED){
+			throw new BadRequestException(400, "status_error", "已收货");
+		}
 		Deliver deliver = deliverDao.getByCardNumber(cardNumber);
 		if (deliver == null)
 		{
-			throw new BadRequestException(400, "deliver_not_found", "未找到该卡号");
+			throw new BadRequestException(400, "deliver_not_found", "无运单信息，无法发货。");
 		}
 		CallExpressServiceTools client = CallExpressServiceTools.getInstance();
 
