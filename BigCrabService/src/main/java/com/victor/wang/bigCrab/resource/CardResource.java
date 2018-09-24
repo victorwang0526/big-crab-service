@@ -229,10 +229,28 @@ public class CardResource
 	@Path("sfOrder")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public void sfGetOrder(CardRequest request)
+	public void sfOrder(CardRequest request)
 	{
 		deliverManager.sfOrder(request);
 	}
+
+
+	/**
+	 * <h3>Description</h3>.
+	 * <p>顺丰下单</p>
+	 *
+	 * @param cardNumber the card number
+	 */
+	@POST
+	@Path("{cardNumber}/sfOrder/{mailno}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public void sfOrderSelf(String cardNumber, String mailno)
+	{
+		deliverManager.sfOrderSelf(cardNumber, mailno);
+	}
+
+
 
 
 	/**
@@ -245,7 +263,7 @@ public class CardResource
 	@Path("{cardNumber}/sfOrder")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public void sfOrder(@PathParam("cardNumber") String cardNumber)
+	public void sfGetOrder(@PathParam("cardNumber") String cardNumber)
 	{
 		deliverManager.sfGetOrder(cardNumber);
 	}

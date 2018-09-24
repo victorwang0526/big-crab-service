@@ -85,6 +85,9 @@ dependencies {
     compile group: 'xml-apis', name: 'xml-apis', version: '2.0.2'
 
 
+    compile 'org.apache.pdfbox:pdfbox:2.0.8'
+
+
     doclet(
             [group: 'com.tenxerconsulting', name: 'swagger-doclet', version: '1.0.7'],
             [group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0']

@@ -9,6 +9,7 @@ import com.victor.wang.bigCrab.sharedObject.CardRequest;
 import com.victor.wang.bigCrab.sharedObject.DeliverCreate;
 import com.victor.wang.bigCrab.sharedObject.DeliverUpdate;
 import com.victor.wang.bigCrab.sharedObject.lov.CardStatus;
+import com.victor.wang.bigCrab.sharedObject.lov.DeliverStatus;
 import com.victor.wang.bigCrab.util.UniqueString;
 import com.victor.wang.bigCrab.util.XmlUtils;
 import com.victor.wang.bigCrab.util.dao.DaoHelper;
@@ -29,6 +30,7 @@ import org.w3c.dom.Document;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,6 +118,41 @@ public class DeliverManager
 		deliverDao.delete(id);
 	}
 
+	public void sfOrderSelf(String cardNumber, String mailno){
+		Card card = cardManager.getCard(cardNumber);
+		if (card.getStatus() == CardStatus.UNUSED)
+		{
+			throw new BadRequestException(400, "card_error", "未使用的卡号");
+		}
+		if (card.getStatus() == CardStatus.PHONED)
+		{
+			throw new BadRequestException(400, "card_error", "已电话预约");
+		}
+		if (card.getStatus() == CardStatus.FROZEN)
+		{
+			throw new BadRequestException(400, "card_error", "已冻结");
+		}
+		if (card.getStatus() == CardStatus.DELIVERED)
+		{
+			throw new BadRequestException(400, "card_error", "已发货");
+		}
+		if (card.getStatus() == CardStatus.RECEIVED)
+		{
+			throw new BadRequestException(400, "card_error", "已收货");
+		}
+		Deliver deliver = deliverDao.getByCardNumber(cardNumber);
+		if (deliver == null)
+		{
+			throw new BadRequestException(400, "card_error", "无运单信息，无法发货。");
+		}
+		deliver.setMailno(mailno);
+		deliver.setStatus(DeliverStatus.DELIVERED);
+		deliver.setRealDeliverAt(new Date());
+		DaoHelper.doUpdate(deliverDao, deliver);
+
+		cardManager.delive(card);
+	}
+
 	public void sfOrder(CardRequest request)
 	{
 		StringBuilder errorMsg = new StringBuilder();
@@ -167,6 +204,8 @@ public class DeliverManager
 			}
 			String mailno = XmlUtils.getValue(document, "mailno");
 			deliver.setMailno(mailno);
+			deliver.setRealDeliverAt(new Date());
+			deliver.setStatus(DeliverStatus.DELIVERED);
 			DaoHelper.doUpdate(deliverDao, deliver);
 
 			cardManager.delive(card);
