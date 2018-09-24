@@ -9,6 +9,7 @@ import com.victor.wang.bigCrab.sharedObject.CardRedeemRequest;
 import com.victor.wang.bigCrab.sharedObject.CardRequest;
 import com.victor.wang.bigCrab.sharedObject.CardValidateRequest;
 import com.victor.wang.bigCrab.sharedObject.DeliverInfo;
+import com.victor.wang.bigCrab.sharedObject.SfOrderSearchResponse;
 import com.victor.wang.bigCrab.sharedObject.lov.CardStatus;
 import com.victor.wang.bigCrab.sharedObject.PaginatedAPIResult;
 import com.victor.wang.bigCrab.util.dao.UniqueString;
@@ -234,7 +235,6 @@ public class CardResource
 		deliverManager.sfOrder(request);
 	}
 
-
 	/**
 	 * <h3>Description</h3>.
 	 * <p>顺丰下单</p>
@@ -245,13 +245,11 @@ public class CardResource
 	@Path("{cardNumber}/sfOrder/{mailno}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public void sfOrderSelf(String cardNumber, String mailno)
+	public void sfOrderSelf(@PathParam("cardNumber") String cardNumber,
+							@PathParam("mailno") String mailno)
 	{
 		deliverManager.sfOrderSelf(cardNumber, mailno);
 	}
-
-
-
 
 	/**
 	 * <h3>Description</h3>.
@@ -263,9 +261,10 @@ public class CardResource
 	@Path("{cardNumber}/sfOrder")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public void sfGetOrder(@PathParam("cardNumber") String cardNumber)
+	public SfOrderSearchResponse sfGetOrder(@PathParam("cardNumber") String cardNumber)
 	{
 		deliverManager.sfGetOrder(cardNumber);
+		return new SfOrderSearchResponse();
 	}
 
 
