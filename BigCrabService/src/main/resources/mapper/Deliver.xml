@@ -136,7 +136,7 @@
         real_deliver_at = #{realDeliverAt,jdbcType=TIMESTAMP},
         received_at = #{receivedAt,jdbcType=TIMESTAMP},
         created_at = #{createdAt,jdbcType=TIMESTAMP},
-        last_modified_at = getdate(),
+        last_modified_at = now(),
         rvn = rvn+1
         WHERE id = #{id,jdbcType=VARCHAR}
     </update>

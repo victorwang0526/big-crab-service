@@ -807,7 +807,7 @@ public class JSMGenerator
 			if(c.getColumnName().toLowerCase().equals("rvn")){
 				content += "        rvn = rvn+1\n";
 			}else if(c.getColumnName().toLowerCase().equals("last_modified_at")){
-				content += "        last_modified_at = getdate(),\n";
+				content += "        last_modified_at = now(),\n";
 			}else {
 				content += "        "+c.getColumnName().toLowerCase()+" = #{"+getHump(c.getColumnName(), true)+",jdbcType="+getJdbcType(c.getDataType())+"},\n";
 			}

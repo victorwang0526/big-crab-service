@@ -171,9 +171,9 @@ public class DeliverManager
 
 			cardManager.delive(card);
 		}
-		if (StringUtils.isBlank(errorMsg.toString()))
+		if (StringUtils.isNoneBlank(errorMsg.toString()))
 		{
-			throw new BadRequestException(400, "deliver_not_found", errorMsg.toString());
+			throw new BadRequestException(400, "deliver_not_found", errorMsg.toString().substring(0, errorMsg.toString().length()-2));
 		}
 	}
 
