@@ -39,7 +39,9 @@ public class AuthorizationInterceptor
 				|| path.contains("/export")
 				|| path.contains("/print")
 				|| path.contains("excel")
-				|| path.contains("ckeditor"))
+				|| path.contains("ckeditor")
+				|| path.contains("validate")
+				|| path.contains("redeem"))
 		{
 			return;
 		} else {
