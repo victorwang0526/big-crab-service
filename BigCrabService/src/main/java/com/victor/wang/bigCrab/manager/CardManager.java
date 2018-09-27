@@ -175,6 +175,9 @@ public class CardManager
 		for (String cardNumber : request.getCardNumbers())
 		{
 			Card card = this.getCard(cardNumber);
+			if(card.getStatus() != CardStatus.UNUSED){
+				throw new BadRequestException(400, "card_error", "只能冻结未使用的卡号");
+			}
 			card.setStatus(CardStatus.FROZEN);
 			DaoHelper.doUpdate(cardDao, card);
 		}
@@ -187,6 +190,15 @@ public class CardManager
 		if (card == null)
 		{
 			throw new BadRequestException(400, "card_error", "卡号或密码不正确。");
+		}
+
+		if (card.getStatus() == CardStatus.FROZEN)
+		{
+			throw new BadRequestException(400, "card_error", "该卡号已被冻结，请联系客服。");
+		}
+		if (card.getStatus() != CardStatus.UNUSED)
+		{
+			throw new BadRequestException(400, "card_error", "该卡号已被兑换.");
 		}
 		if (!card.getPassword().equals(validateRequest.getPassword()))
 		{
@@ -202,14 +214,6 @@ public class CardManager
 			}
 			DaoHelper.doUpdate(cardDao, card);
 			throw new BadRequestException(400, "card_error", "卡号或密码不正确，剩余" + (5 - card.getErrorTimes()) + "次。");
-		}
-		if (card.getStatus() == CardStatus.FROZEN)
-		{
-			throw new BadRequestException(400, "card_error", "该卡号已被冻结，请联系客服。");
-		}
-		if (card.getStatus() != CardStatus.UNUSED)
-		{
-			throw new BadRequestException(400, "card_error", "该卡号已被兑换.");
 		}
 		return card;
 	}

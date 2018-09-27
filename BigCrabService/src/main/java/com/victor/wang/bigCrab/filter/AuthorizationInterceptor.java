@@ -41,7 +41,8 @@ public class AuthorizationInterceptor
 				|| path.contains("excel")
 				|| path.contains("ckeditor")
 				|| path.contains("validate")
-				|| path.contains("redeem"))
+				|| path.contains("redeem")
+				|| (path.contains("sfOrder") && !path.contains("sfOrder/")))
 		{
 			return;
 		} else {

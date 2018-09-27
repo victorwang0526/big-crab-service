@@ -19,7 +19,7 @@ public class KdnApi
 		KdnApi api = new KdnApi();
 		try
 		{
-			String result = api.getOrderTracesByJson("SF", "755123456789");
+			String result = api.getOrderTracesByJson("SF", "118461988807");
 			System.out.print(result);
 
 		}

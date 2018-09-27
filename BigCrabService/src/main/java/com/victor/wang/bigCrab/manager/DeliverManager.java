@@ -130,22 +130,22 @@ public class DeliverManager
 		{
 			throw new BadRequestException(400, "card_error", "未使用的卡号");
 		}
-		if (card.getStatus() == CardStatus.PHONED)
-		{
-			throw new BadRequestException(400, "card_error", "已电话预约");
-		}
-		if (card.getStatus() == CardStatus.FROZEN)
-		{
-			throw new BadRequestException(400, "card_error", "已冻结");
-		}
-		if (card.getStatus() == CardStatus.DELIVERED)
-		{
-			throw new BadRequestException(400, "card_error", "已发货");
-		}
-		if (card.getStatus() == CardStatus.RECEIVED)
-		{
-			throw new BadRequestException(400, "card_error", "已收货");
-		}
+//		if (card.getStatus() == CardStatus.PHONED)
+//		{
+//			throw new BadRequestException(400, "card_error", "已电话预约");
+//		}
+//		if (card.getStatus() == CardStatus.FROZEN)
+//		{
+//			throw new BadRequestException(400, "card_error", "已冻结");
+//		}
+//		if (card.getStatus() == CardStatus.DELIVERED)
+//		{
+//			throw new BadRequestException(400, "card_error", "已发货");
+//		}
+//		if (card.getStatus() == CardStatus.RECEIVED)
+//		{
+//			throw new BadRequestException(400, "card_error", "已收货");
+//		}
 		Deliver deliver = deliverDao.getByCardNumber(cardNumber);
 		if (deliver == null)
 		{
@@ -240,56 +240,56 @@ public class DeliverManager
 		{
 			throw new BadRequestException(400, "deliver_not_found", "未找到该卡号");
 		}
-		if (StringUtils.isBlank(deliver.getMailno()))
-		{
-			throw new BadRequestException(400, "deliver_not_found", "运单号不存在");
-		}
-		CallExpressServiceTools client = CallExpressServiceTools.getInstance();
-
-		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("clientCode", clientCode);
-		result.put("mailno", deliver.getMailno());
-
-		String respXml = client.callSfExpressServiceByCSIM(sfUrl,
-				getRequest(result, "route.xml"), clientCode, checkWord);
-		Document document = XmlUtils.stringTOXml(respXml);
-		String responseCode = XmlUtils.getNodeValue(document, "Response/Head");
-		if (responseCode.equals("ERR"))
-		{
-			String responseMsg = XmlUtils.getNodeValue(document, "Response/ERROR");
-			throw new BadRequestException(400, "sf_error", responseMsg);
-		}
+//		if (StringUtils.isBlank(deliver.getMailno()))
+//		{
+//			throw new BadRequestException(400, "deliver_not_found", "运单号不存在");
+//		}
+//		CallExpressServiceTools client = CallExpressServiceTools.getInstance();
+//
+//		Map<String, Object> result = new HashMap<String, Object>();
+//		result.put("clientCode", clientCode);
+//		result.put("mailno", deliver.getMailno());
+//
+//		String respXml = client.callSfExpressServiceByCSIM(sfUrl,
+//				getRequest(result, "route.xml"), clientCode, checkWord);
+//		Document document = XmlUtils.stringTOXml(respXml);
+//		String responseCode = XmlUtils.getNodeValue(document, "Response/Head");
+//		if (responseCode.equals("ERR"))
+//		{
+//			String responseMsg = XmlUtils.getNodeValue(document, "Response/ERROR");
+//			throw new BadRequestException(400, "sf_error", responseMsg);
+//		}
 
 		SfOrderSearchResponse response = new SfOrderSearchResponse();
 		response.setDeliverInfo(mapper.map(deliver, DeliverInfo.class));
 
-		if (deliver.getMailno().equals("755123456789"))
-		{
-			for (int i = 1; i < 10; i++)
-			{
-				SfRoute route = new SfRoute();
-				route.setAcceptTime("2018-09-0" + i + " 08:01:22");
-				route.setAcceptAddress("地址1");
-				route.setRemark("已收件");
-				route.setOpcode("50");
-				response.getRoutes().add(route);
-			}
-			return response;
-		}
-		NodeList booklist = document.getElementsByTagName("Route");
-		if (booklist != null && booklist.getLength() > 0)
-		{
-			for (int i = 0; i < booklist.getLength(); i++)
-			{
-				SfRoute route = new SfRoute();
-				Node node = booklist.item(i);
-				route.setAcceptTime(node.getAttributes().getNamedItem("accept_time").getNodeValue());
-				route.setAcceptTime(node.getAttributes().getNamedItem("accept_address").getNodeValue());
-				route.setAcceptTime(node.getAttributes().getNamedItem("remark").getNodeValue());
-				route.setAcceptTime(node.getAttributes().getNamedItem("opcode").getNodeValue());
-				response.getRoutes().add(route);
-			}
-		}
+//		if (deliver.getMailno().equals("755123456789"))
+//		{
+//			for (int i = 1; i < 10; i++)
+//			{
+//				SfRoute route = new SfRoute();
+//				route.setAcceptTime("2018-09-0" + i + " 08:01:22");
+//				route.setAcceptAddress("地址1");
+//				route.setRemark("已收件");
+//				route.setOpcode("50");
+//				response.getRoutes().add(route);
+//			}
+//			return response;
+//		}
+//		NodeList booklist = document.getElementsByTagName("Route");
+//		if (booklist != null && booklist.getLength() > 0)
+//		{
+//			for (int i = 0; i < booklist.getLength(); i++)
+//			{
+//				SfRoute route = new SfRoute();
+//				Node node = booklist.item(i);
+//				route.setAcceptTime(node.getAttributes().getNamedItem("accept_time").getNodeValue());
+//				route.setAcceptTime(node.getAttributes().getNamedItem("accept_address").getNodeValue());
+//				route.setAcceptTime(node.getAttributes().getNamedItem("remark").getNodeValue());
+//				route.setAcceptTime(node.getAttributes().getNamedItem("opcode").getNodeValue());
+//				response.getRoutes().add(route);
+//			}
+//		}
 		return response;
 	}
 
