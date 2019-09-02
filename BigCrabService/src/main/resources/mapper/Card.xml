@@ -109,16 +109,23 @@
     </sql>
     <select id="getList" parameterType="java.util.HashMap" resultMap="cardResultMapper">
         SELECT
-        <include refid="allFields" />
-        FROM t_card
+        a.*
+        FROM t_card a
+        left join t_deliver b
+        on a.card_number = b.card_number
         WHERE 1=1
-        <include refid="findCardsParams"/>
+        <if test="status != null">
+            AND a.status = #{status}
+        </if>
+        <if test="cardNumber != null">
+            AND a.card_number = #{cardNumber}
+        </if>
         <choose>
             <when test="orderBy != null">
                 ORDER BY ${orderBy}
             </when>
             <otherwise>
-                ORDER BY card_number
+                ORDER BY CASE WHEN b.deliver_at IS NULL THEN 1 ELSE 0 END, b.deliver_at asc, a.card_number
             </otherwise>
         </choose>
         <if test="limit != null and offset != null">
