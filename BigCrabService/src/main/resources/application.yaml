@@ -5,14 +5,15 @@ spring:
   jersey:
 #    type: filter
 #    application-path: /api
-#  jpa:
-#    database: mysql
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5Dialect
 #    show-sql: true
 #    hibernate:
 #      ddl-auto: create
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/bigcrab?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false
+    url: jdbc:mysql://localhost:3306/bigcrab?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
     username: bigcrab
     password: bigcrab
 mybatis:
