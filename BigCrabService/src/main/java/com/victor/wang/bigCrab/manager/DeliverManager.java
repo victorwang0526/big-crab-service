@@ -30,11 +30,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -240,56 +242,49 @@ public class DeliverManager
 		{
 			throw new BadRequestException(400, "deliver_not_found", "未找到该卡号");
 		}
-//		if (StringUtils.isBlank(deliver.getMailno()))
-//		{
-//			throw new BadRequestException(400, "deliver_not_found", "运单号不存在");
-//		}
-//		CallExpressServiceTools client = CallExpressServiceTools.getInstance();
-//
-//		Map<String, Object> result = new HashMap<String, Object>();
-//		result.put("clientCode", clientCode);
-//		result.put("mailno", deliver.getMailno());
-//
-//		String respXml = client.callSfExpressServiceByCSIM(sfUrl,
-//				getRequest(result, "route.xml"), clientCode, checkWord);
-//		Document document = XmlUtils.stringTOXml(respXml);
-//		String responseCode = XmlUtils.getNodeValue(document, "Response/Head");
-//		if (responseCode.equals("ERR"))
-//		{
-//			String responseMsg = XmlUtils.getNodeValue(document, "Response/ERROR");
-//			throw new BadRequestException(400, "sf_error", responseMsg);
-//		}
+		if (StringUtils.isBlank(deliver.getMailno()))
+		{
+			throw new BadRequestException(400, "deliver_not_found", "运单号不存在");
+		}
+		CallExpressServiceTools client = CallExpressServiceTools.getInstance();
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("clientCode", clientCode);
+		result.put("mailno", deliver.getMailno());
+
+		String respXml = client.callSfExpressServiceByCSIM(sfUrl,
+				getRequest(result, "route.xml"), clientCode, checkWord);
+		Document document = XmlUtils.stringTOXml(respXml);
+		String responseCode = XmlUtils.getNodeValue(document, "Response/Head");
+		if (responseCode.equals("ERR"))
+		{
+			String responseMsg = XmlUtils.getNodeValue(document, "Response/ERROR");
+			throw new BadRequestException(400, "sf_error", responseMsg);
+		}
+
+
+		Node route = document.getFirstChild().getLastChild().getFirstChild().getFirstChild();
+
+		List<SfRoute> sfRoutes = new ArrayList<>();
+		while(route != null) {
+
+			SfRoute r = new SfRoute();
+
+			NamedNodeMap map = route.getAttributes();
+			r.setRemark(map.getNamedItem("remark").getNodeValue());
+			r.setAcceptTime(map.getNamedItem("accept_time").getNodeValue());
+			r.setAcceptAddress(map.getNamedItem("accept_address").getNodeValue());
+			r.setOpcode(map.getNamedItem("opcode").getNodeValue());
+
+			sfRoutes.add(r);
+
+			route = route.getNextSibling();
+		}
 
 		SfOrderSearchResponse response = new SfOrderSearchResponse();
 		response.setDeliverInfo(mapper.map(deliver, DeliverInfo.class));
+		response.setRoutes(sfRoutes);
 
-//		if (deliver.getMailno().equals("755123456789"))
-//		{
-//			for (int i = 1; i < 10; i++)
-//			{
-//				SfRoute route = new SfRoute();
-//				route.setAcceptTime("2018-09-0" + i + " 08:01:22");
-//				route.setAcceptAddress("地址1");
-//				route.setRemark("已收件");
-//				route.setOpcode("50");
-//				response.getRoutes().add(route);
-//			}
-//			return response;
-//		}
-//		NodeList booklist = document.getElementsByTagName("Route");
-//		if (booklist != null && booklist.getLength() > 0)
-//		{
-//			for (int i = 0; i < booklist.getLength(); i++)
-//			{
-//				SfRoute route = new SfRoute();
-//				Node node = booklist.item(i);
-//				route.setAcceptTime(node.getAttributes().getNamedItem("accept_time").getNodeValue());
-//				route.setAcceptTime(node.getAttributes().getNamedItem("accept_address").getNodeValue());
-//				route.setAcceptTime(node.getAttributes().getNamedItem("remark").getNodeValue());
-//				route.setAcceptTime(node.getAttributes().getNamedItem("opcode").getNodeValue());
-//				response.getRoutes().add(route);
-//			}
-//		}
 		return response;
 	}
 

@@ -14,6 +14,16 @@ public class Card
 	private String id;
 
 	/**
+	 * 购买人
+	 */
+	private String buyer;
+
+	/**
+	 * 购买日期
+	 */
+	private String boughtDate;
+
+	/**
 	 * 
 	 */
 	private String cardNumber;
