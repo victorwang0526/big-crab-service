@@ -28,7 +28,7 @@ public class TestCallWaybillPrinter33 {
         /** 调用打印机 弹出窗口 可选择份数 适用于单张打印【二联单】**/
         String url8 = "http://localhost:4040/sf/waybill/print?type=V2.0.FM_poster_100mm150mm&output=print";
         /**直接输出图片的BASE64编码字符串 可以使用html标签直接转换成图片【二联单】**/
-        String url9 = "http://116.62.120.169/waybill-print-service/sf/waybill/print?type=V2.0.FM_poster_100mm150mm&output=image";
+        String url9 = "http://116.62.120.169:4040/sf/waybill/print?type=V2.0.FM_poster_100mm150mm&output=image";
         /*********3联210 丰密面单**************/
         /**调用打印机 不弹出窗口 适用于批量打印【三联单】**/
         String url10 = "http://localhost:4040/sf/waybill/print?type=V3.0.FM_poster_100mm210mm&output=noAlertPrint";
