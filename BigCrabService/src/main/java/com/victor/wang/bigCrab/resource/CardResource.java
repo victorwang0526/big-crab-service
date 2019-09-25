@@ -10,6 +10,7 @@ import com.victor.wang.bigCrab.sharedObject.CardRequest;
 import com.victor.wang.bigCrab.sharedObject.CardValidateRequest;
 import com.victor.wang.bigCrab.sharedObject.DeliverInfo;
 import com.victor.wang.bigCrab.sharedObject.SfOrderSearchResponse;
+import com.victor.wang.bigCrab.sharedObject.SfPrintInfo;
 import com.victor.wang.bigCrab.sharedObject.lov.CardStatus;
 import com.victor.wang.bigCrab.sharedObject.PaginatedAPIResult;
 import com.victor.wang.bigCrab.util.dao.UniqueString;
@@ -250,6 +251,22 @@ public class CardResource
 							@PathParam("mailno") String mailno)
 	{
 		deliverManager.sfOrderSelf(cardNumber, mailno);
+	}
+
+	/**
+	 * <h3>Description</h3>.
+	 * <p>顺丰打印</p>
+	 *
+	 * @param cardNumber the card number
+	 */
+	@POST
+	@Path("{cardNumber}/sfOrder/{mailno}/print")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public SfPrintInfo sfOrderPrint(@PathParam("cardNumber") String cardNumber,
+									@PathParam("mailno") String mailno)
+	{
+		return deliverManager.getPrint(cardNumber, mailno);
 	}
 
 	/**
