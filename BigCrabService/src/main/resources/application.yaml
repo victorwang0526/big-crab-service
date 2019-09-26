@@ -14,14 +14,24 @@ spring:
   datasource:
     driverClassName: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/bigcrab?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
-    username: bigcrab
-    password: bigcrab
+    username: root
+    password: root
 mybatis:
   typeAliasesPackage: com.victor.wang.bigCrab.model
   mapperLocations: classpath:mapper/*.xml
 
 sf:
   url: http://bsp-oisp.sf-express.com/bsp-oisp/sfexpressService
+  printUrl: http://116.62.120.169:4040/sf/waybill/print?type=V2.0.FM_poster_100mm150mm&output=image
   clientCode: WFX_a1uDS
   checkWord: 2PwIcTrKG92tyWYCcNmgJtwV4boJRDVe
-  custid: 7551234567
+  custid: 5125884174
+  topLogo: true
+  deliverProvince: 江苏省
+  deliverCity: 苏州市
+  deliverCounty: 昆山市
+  deliverAddress: 陆杨镇
+  deliverName: 王文俊
+  deliverMobile: 15051515151
+  deliverTel: 15051515151
+  expressType: 16

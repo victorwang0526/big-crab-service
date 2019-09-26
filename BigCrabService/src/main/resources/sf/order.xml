@@ -1,8 +1,7 @@
 <Request service="OrderService" lang="zh-CN">
     <Head>${clientCode}</Head>
     <Body>
-        <Order
-                orderid="${orderid}"
+        <Order orderid="${orderid}"
                 d_company="${d_company}"
                 d_contact="${d_contact}"
                 d_tel="${d_tel}"
@@ -10,22 +9,16 @@
                 d_city="${d_city}"
                 d_county="${d_county}"
                 d_address="${d_address}"
-                j_company="顺丰速运"
-                j_contact="王奉轩"
-                j_tel="18625091447"
-                j_mobile="18625091447"
-                j_address="江苏省苏州市吴中区尹山湖双湾锦园32#703"
-                express_type="1"
+                j_contact="${j_contact}"
+                j_tel="${j_tel}"
+                j_mobile="${j_mobile}"
+                j_address="${j_address}"
+                express_type="${express_type}"
                 pay_method="1"
-                parcel_quantity="1"
-                cargo_length="33"
-                cargo_width="33"
-                cargo_height="33"
-                remark="">
-            <Cargo
-                    name="LV1"
-                    count="3"
-                    unit="a"
+                parcel_quantity="1">
+            <Cargo name="大闸蟹"
+                    count="1"
+                    unit="件"
                     weight=""
                     amount=""
                     currency=""

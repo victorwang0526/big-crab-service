@@ -260,13 +260,19 @@ public class CardResource
 	 * @param cardNumber the card number
 	 */
 	@POST
-	@Path("{cardNumber}/sfOrder/{mailno}/print")
+	@Path("{cardNumber}/sfOrderPrint")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public SfPrintInfo sfOrderPrint(@PathParam("cardNumber") String cardNumber,
-									@PathParam("mailno") String mailno)
+	public SfPrintInfo sfOrderPrint(@PathParam("cardNumber") String cardNumber)
 	{
-		return deliverManager.getPrint(cardNumber, mailno);
+		SfPrintInfo sf = null;
+		try{
+			sf = deliverManager.WayBillPrinterTools(cardNumber);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return sf;
 	}
 
 	/**

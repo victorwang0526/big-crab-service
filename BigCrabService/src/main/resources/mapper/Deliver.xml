@@ -6,6 +6,8 @@
         <result column="card_number" property="cardNumber" jdbcType="VARCHAR" />
         <result column="order_id" property="orderId" jdbcType="VARCHAR" />
         <result column="mailno" property="mailno" jdbcType="VARCHAR" />
+        <result column="two_dimension_code" property="twoDimensionCode" jdbcType="VARCHAR" />
+        <result column="sfResponse" property="sfResponse" jdbcType="VARCHAR" />
         <result column="d_company" property="dCompany" jdbcType="VARCHAR" />
         <result column="d_contact" property="dContact" jdbcType="VARCHAR" />
         <result column="d_tel" property="dTel" jdbcType="VARCHAR" />
@@ -27,6 +29,8 @@
         card_number,
         order_id,
         mailno,
+        two_dimension_code,
+        sfResponse,
         d_company,
         d_contact,
         d_tel,
@@ -78,6 +82,8 @@
         card_number,
         order_id,
         mailno,
+        two_dimension_code,
+        sfResponse,
         d_company,
         d_contact,
         d_tel,
@@ -99,6 +105,8 @@
         #{cardNumber,jdbcType=VARCHAR},
         #{orderId,jdbcType=VARCHAR},
         #{mailno,jdbcType=VARCHAR},
+        #{twoDimensionCode,jdbcType=VARCHAR},
+        #{sfResponse,jdbcType=VARCHAR},
         #{dCompany,jdbcType=VARCHAR},
         #{dContact,jdbcType=VARCHAR},
         #{dTel,jdbcType=VARCHAR},
@@ -123,6 +131,8 @@
         card_number = #{cardNumber,jdbcType=VARCHAR},
         order_id = #{orderId,jdbcType=VARCHAR},
         mailno = #{mailno,jdbcType=VARCHAR},
+        two_dimension_code = #{twoDimensionCode,jdbcType=VARCHAR},
+        sfResponse = #{sfResponse,jdbcType=VARCHAR},
         d_company = #{dCompany,jdbcType=VARCHAR},
         d_contact = #{dContact,jdbcType=VARCHAR},
         d_tel = #{dTel,jdbcType=VARCHAR},

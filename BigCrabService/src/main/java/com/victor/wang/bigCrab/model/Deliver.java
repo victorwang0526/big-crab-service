@@ -88,6 +88,16 @@ public class Deliver
 	 */
 	private Date receivedAt;
 
+	/**
+	 * 二维码
+	 */
+	private String twoDimensionCode;
+
+	/**
+	 * 下单返回的response
+	 */
+	private String sfResponse;
+
 	public String getId()
 	{
 		return id;
@@ -106,6 +116,14 @@ public class Deliver
 	public void setCardNumber(String cardNumber)
 	{
 		this.cardNumber = cardNumber;
+	}
+
+	public String getSfResponse() {
+		return sfResponse;
+	}
+
+	public void setSfResponse(String sfResponse) {
+		this.sfResponse = sfResponse;
 	}
 
 	public String getOrderId()
@@ -201,6 +219,14 @@ public class Deliver
 	public DeliverStatus getStatus()
 	{
 		return status;
+	}
+
+	public String getTwoDimensionCode() {
+		return twoDimensionCode;
+	}
+
+	public void setTwoDimensionCode(String twoDimensionCode) {
+		this.twoDimensionCode = twoDimensionCode;
 	}
 
 	public void setStatus(DeliverStatus status)

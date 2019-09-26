@@ -21,6 +21,15 @@ public class XmlUtils
 		return booklist.item(0).getAttributes().getNamedItem(nodeName).getNodeValue();
 	}
 
+
+	public static String getValue(String tagName, Document document, String nodeName) {
+		NodeList booklist = document.getElementsByTagName(tagName);
+		if(booklist == null || booklist.getLength() == 0){
+			return null;
+		}
+		return booklist.item(0).getAttributes().getNamedItem(nodeName).getNodeValue();
+	}
+
 	/**
 	 * @param document
 	 * @return 某个节点的值 前提是需要知道xml格式，知道需要取的节点相对根节点所在位置
