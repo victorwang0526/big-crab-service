@@ -265,14 +265,7 @@ public class CardResource
 	@Produces(MediaType.APPLICATION_JSON)
 	public SfPrintInfo sfOrderPrint(@PathParam("cardNumber") String cardNumber)
 	{
-		SfPrintInfo sf = null;
-		try{
-			sf = deliverManager.WayBillPrinterTools(cardNumber);
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return sf;
+		return deliverManager.getPrint(cardNumber);
 	}
 
 	/**
