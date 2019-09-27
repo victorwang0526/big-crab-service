@@ -44,7 +44,7 @@ public class TestCallWaybillPrinter33 {
         /**
          * 直接输出图片的BASE64编码字符串 可以使用html标签直接转换成图片【二联单】
          */
-        String url9 = "http://localhost:4040/sf/waybill/print?type=V2.0.FM_poster_100mm150mm&output=image";
+        String url9 = "http://116.62.120.169:4040/sf/waybill/print?type=V2.0.FM_poster_100mm150mm&output=image";
 
 
         /*********3联210 丰密运单**************/
@@ -176,7 +176,7 @@ public class TestCallWaybillPrinter33 {
         rlsMain.setDestTeamCode("012345678");
         rlsMain.setSourceTransferCode("021WTF");
         //对应下订单设置路由标签返回字段twoDimensionCode 该参
-        rlsMain.setQRCode("MMM={'k1':'755WE','k2':'021WT','k3':'','k4':'T4','k5':'SF7551234567890','k6':''}");
+        rlsMain.setQRCode("MMM={'k1':'','k2':'335','k3':'','k4':'T4','k5':'444018283429','k6':'','k7':'5bb72ddf'}");
         rlsInfoDtoList.add(rlsMain);
 
 
@@ -240,6 +240,7 @@ public class TestCallWaybillPrinter33 {
 
         waybillDtoList.add(dto);
 
+//        System.out.println("请求参数： "+MyJsonUtil.object2json(waybillDtoList));
 
         ObjectMapper objectMapper = new ObjectMapper();
         StringWriter stringWriter = new StringWriter();
@@ -272,7 +273,7 @@ public class TestCallWaybillPrinter33 {
 
         //将换行全部替换成空
         strImg=strImg.replace("\\n", "");
-        //System.out.println(strImg);
+        System.out.println(strImg);
 
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd-HHmmss");
         String dateStr = format.format(new Date());

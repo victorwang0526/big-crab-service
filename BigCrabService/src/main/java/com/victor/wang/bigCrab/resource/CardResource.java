@@ -3,7 +3,6 @@ package com.victor.wang.bigCrab.resource;
 import com.victor.wang.bigCrab.manager.CardManager;
 import com.victor.wang.bigCrab.manager.DeliverManager;
 import com.victor.wang.bigCrab.model.Card;
-import com.victor.wang.bigCrab.model.Deliver;
 import com.victor.wang.bigCrab.sharedObject.CardInfo;
 import com.victor.wang.bigCrab.sharedObject.CardRedeemRequest;
 import com.victor.wang.bigCrab.sharedObject.CardRequest;
@@ -265,7 +264,7 @@ public class CardResource
 	@Produces(MediaType.APPLICATION_JSON)
 	public SfPrintInfo sfOrderPrint(@PathParam("cardNumber") String cardNumber)
 	{
-		return deliverManager.getPrint(cardNumber);
+        return deliverManager.getPrint(cardNumber);
 	}
 
 	/**

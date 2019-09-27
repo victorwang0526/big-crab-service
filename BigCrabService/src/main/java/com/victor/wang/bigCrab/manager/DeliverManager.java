@@ -472,7 +472,7 @@ public class DeliverManager {
             ObjectMapper objectMapper = new ObjectMapper();
             StringWriter stringWriter = new StringWriter();
             objectMapper.writeValue(stringWriter, waybillDtoList);
-            httpConn.getOutputStream().write(stringWriter.toString().getBytes());
+            httpConn.getOutputStream().write(stringWriter.toString().getBytes("UTF-8"));
             httpConn.getOutputStream().flush();
             httpConn.getOutputStream().close();
             InputStream in = httpConn.getInputStream();
@@ -514,5 +514,4 @@ public class DeliverManager {
         }
         return sfPrintInfo;
     }
-
 }
