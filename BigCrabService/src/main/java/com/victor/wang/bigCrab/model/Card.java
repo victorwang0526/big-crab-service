@@ -49,6 +49,11 @@ public class Card
 	private String description;
 
 	/**
+	 * 备注
+	 */
+	private String remark;
+
+	/**
 	 * 
 	 */
 	private Date lastErrorAt;
@@ -156,6 +161,36 @@ public class Card
 	public void setRedeemAt(Date redeemAt)
 	{
 		this.redeemAt = redeemAt;
+	}
+
+	public String getBuyer()
+	{
+		return buyer;
+	}
+
+	public void setBuyer(String buyer)
+	{
+		this.buyer = buyer;
+	}
+
+	public String getBoughtDate()
+	{
+		return boughtDate;
+	}
+
+	public void setBoughtDate(String boughtDate)
+	{
+		this.boughtDate = boughtDate;
+	}
+
+	public String getRemark()
+	{
+		return remark;
+	}
+
+	public void setRemark(String remark)
+	{
+		this.remark = remark;
 	}
 
 	public Date getDeliverAt()

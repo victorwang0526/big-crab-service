@@ -461,7 +461,7 @@ public class DeliverManager {
             cargo1.setCargoCount(1);
             cargo1.setCargoUnit("件");
 //		cargo1.setSku("00015645");
-//		cargo1.setRemark("手机贵重物品 小心轻放");
+		cargo1.setRemark(card.getCardType() + " " + card.getRemark());
             List<CargoInfoDto> cargoInfoList = new ArrayList<CargoInfoDto>();
             cargoInfoList.add(cargo1);
             dto.setCargoInfoDtoList(cargoInfoList);

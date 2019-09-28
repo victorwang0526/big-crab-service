@@ -18,6 +18,16 @@ public class CardInfo
 	private String cardNumber;
 
 	/**
+	 * 购买人
+	 */
+	private String buyer;
+
+	/**
+	 * 购买日期
+	 */
+	private String boughtDate;
+
+	/**
 	 * card type
 	 */
 	private String cardType;
@@ -31,6 +41,8 @@ public class CardInfo
 	 * the description
 	 */
 	private String description;
+
+	private String remark;
 
 	/**
 	 * the lastErrorAt
@@ -64,6 +76,26 @@ public class CardInfo
 
 	private DeliverInfo deliverInfo;
 
+	public String getBuyer()
+	{
+		return buyer;
+	}
+
+	public void setBuyer(String buyer)
+	{
+		this.buyer = buyer;
+	}
+
+	public String getBoughtDate()
+	{
+		return boughtDate;
+	}
+
+	public void setBoughtDate(String boughtDate)
+	{
+		this.boughtDate = boughtDate;
+	}
+
 	public String getId()
 	{
 		return id;
@@ -87,6 +119,16 @@ public class CardInfo
 	public String getStatus()
 	{
 		return status;
+	}
+
+	public String getRemark()
+	{
+		return remark;
+	}
+
+	public void setRemark(String remark)
+	{
+		this.remark = remark;
 	}
 
 	public void setStatus(String status)

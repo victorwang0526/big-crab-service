@@ -1,0 +1,2 @@
+ALTER TABLE t_card ADD buyer VARCHAR(255) NULL;
+ALTER TABLE t_card ADD bought_date VARCHAR(255) NULL;

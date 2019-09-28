@@ -8,6 +8,9 @@
         <result column="card_type" property="cardType" jdbcType="VARCHAR" />
         <result column="status" property="status" jdbcType="VARCHAR" />
         <result column="description" property="description" jdbcType="VARCHAR" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="buyer" property="buyer" jdbcType="VARCHAR" />
+        <result column="bought_date" property="boughtDate" jdbcType="VARCHAR" />
         <result column="last_error_at" property="lastErrorAt" jdbcType="TIMESTAMP" />
         <result column="error_times" property="errorTimes" jdbcType="INTEGER" />
         <result column="redeem_at" property="redeemAt" jdbcType="TIMESTAMP" />
@@ -22,6 +25,9 @@
         card_type,
         status,
         description,
+        remark,
+        buyer,
+        bought_date,
         last_error_at,
         error_times,
         redeem_at,
@@ -59,6 +65,9 @@
         card_type,
         status,
         description,
+        remark,
+        buyer,
+        bought_date,
         last_error_at,
         error_times,
         redeem_at,
@@ -73,6 +82,9 @@
         #{cardType,jdbcType=VARCHAR},
         #{status,jdbcType=VARCHAR},
         #{description,jdbcType=VARCHAR},
+        #{remark,jdbcType=VARCHAR},
+        #{buyer,jdbcType=VARCHAR},
+        #{boughtDate,jdbcType=VARCHAR},
         #{lastErrorAt,jdbcType=TIMESTAMP},
         #{errorTimes,jdbcType=INTEGER},
         #{redeemAt,jdbcType=TIMESTAMP},
@@ -90,6 +102,9 @@
         card_type = #{cardType,jdbcType=VARCHAR},
         status = #{status,jdbcType=VARCHAR},
         description = #{description,jdbcType=VARCHAR},
+        remark = #{remark,jdbcType=VARCHAR},
+        buyer = #{buyer,jdbcType=VARCHAR},
+        bought_date = #{boughtDate,jdbcType=VARCHAR},
         last_error_at = #{lastErrorAt,jdbcType=TIMESTAMP},
         error_times = #{errorTimes,jdbcType=INTEGER},
         redeem_at = #{redeemAt,jdbcType=TIMESTAMP},

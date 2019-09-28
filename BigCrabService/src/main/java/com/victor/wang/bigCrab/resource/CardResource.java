@@ -86,10 +86,13 @@ public class CardResource
 						}
 						Card card = new Card();
 						card.setId(UniqueString.uuidUniqueString());
+						card.setBuyer(r.getCell(0).getStringCellValue());
+						card.setBoughtDate(r.getCell(1).getStringCellValue());
 						card.setCardNumber(r.getCell(2).getStringCellValue().replace("NO.", ""));
 						card.setPassword(r.getCell(3).getStringCellValue());
 						card.setCardType(r.getCell(4).getStringCellValue());
 						card.setDescription(r.getCell(5).getStringCellValue());
+						card.setRemark(r.getCell(6).getStringCellValue());
 						card.setStatus(CardStatus.UNUSED);
 						cards.add(card);
 					}

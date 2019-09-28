@@ -37,4 +37,13 @@
         <sqlFile path="database/20190920131803_add_qr.sql"
                  relativeToChangelogFile="true"/>
     </changeSet>
+    <changeSet author="Victor Wang" id="20190928184201" logicalFilePath="/opt/epic/Epic-Fraud-DBMigration/changelog.xml">
+        <sqlFile path="database/20190928184201_add_remark.sql"
+                 relativeToChangelogFile="true"/>
+    </changeSet>
+    <changeSet author="Victor Wang" id="20190928184202" logicalFilePath="/opt/epic/Epic-Fraud-DBMigration/changelog.xml">
+        <sqlFile path="database/20190928184202_add_buy.sql"
+                 relativeToChangelogFile="true"/>
+    </changeSet>
+
 </databaseChangeLog>
