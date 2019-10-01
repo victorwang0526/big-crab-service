@@ -291,22 +291,36 @@ public class DeliverManager {
         }
 
 
-        Node route = document.getFirstChild().getLastChild().getFirstChild().getFirstChild();
 
+        Node responseNode = document.getFirstChild();
+        Node body = responseNode.getLastChild();
         List<SfRoute> sfRoutes = new ArrayList<>();
-        while (route != null) {
 
+        if(body.hasChildNodes()) {
+            Node route = body.getFirstChild().getFirstChild();
+
+            while (route != null) {
+
+                SfRoute r = new SfRoute();
+
+                NamedNodeMap map = route.getAttributes();
+                r.setRemark(map.getNamedItem("remark").getNodeValue());
+                r.setAcceptTime(map.getNamedItem("accept_time").getNodeValue());
+                r.setAcceptAddress(map.getNamedItem("accept_address").getNodeValue());
+                r.setOpcode(map.getNamedItem("opcode").getNodeValue());
+
+                sfRoutes.add(r);
+
+                route = route.getNextSibling();
+            }
+        }else {
             SfRoute r = new SfRoute();
-
-            NamedNodeMap map = route.getAttributes();
-            r.setRemark(map.getNamedItem("remark").getNodeValue());
-            r.setAcceptTime(map.getNamedItem("accept_time").getNodeValue());
-            r.setAcceptAddress(map.getNamedItem("accept_address").getNodeValue());
-            r.setOpcode(map.getNamedItem("opcode").getNodeValue());
+            r.setRemark("待揽收");
+            r.setAcceptTime("");
+            r.setAcceptAddress("");
+            r.setOpcode("");
 
             sfRoutes.add(r);
-
-            route = route.getNextSibling();
         }
 
         SfOrderSearchResponse response = new SfOrderSearchResponse();
