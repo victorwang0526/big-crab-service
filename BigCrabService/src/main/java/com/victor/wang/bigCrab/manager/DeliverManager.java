@@ -39,7 +39,6 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -48,6 +47,7 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -476,7 +476,8 @@ public class DeliverManager {
             cargo1.setCargoCount(1);
             cargo1.setCargoUnit("件");
 //		cargo1.setSku("00015645");
-		cargo1.setRemark(card.getCardType() + " " + card.getRemark());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		cargo1.setRemark(card.getCardType() + " " + StringUtils.trimToEmpty(card.getRemark()) + ' ' + sdf.format(deliver.getDeliverAt()));
             List<CargoInfoDto> cargoInfoList = new ArrayList<CargoInfoDto>();
             cargoInfoList.add(cargo1);
             dto.setCargoInfoDtoList(cargoInfoList);
