@@ -2,6 +2,7 @@
     <Head>${clientCode}</Head>
     <Body>
         <Order orderid="${orderid}"
+               custid="${custid}"
                 d_company="${d_company}"
                 d_contact="${d_contact}"
                 d_tel="${d_tel}"

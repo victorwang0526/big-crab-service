@@ -228,6 +228,7 @@ public class DeliverManager {
             Map<String, Object> result = new HashMap<String, Object>();
             result.put("clientCode", clientCode);
             result.put("orderid", deliver.getCardNumber());
+            result.put("custid", this.custid);
             result.put("d_company", "");
             result.put("d_contact", deliver.getdContact());
             result.put("d_tel", deliver.getdTel());
