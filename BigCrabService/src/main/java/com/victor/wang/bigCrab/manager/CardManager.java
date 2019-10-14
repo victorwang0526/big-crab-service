@@ -58,11 +58,18 @@ public class CardManager
 				continue;
 			}
 			Card cardAlready = cardDao.getByCardNumber(card.getCardNumber());
-			if (cardAlready != null)
+			if (cardAlready == null)
 			{
-				continue;
+				DaoHelper.insert(cardDao, card);
+			}else {
+				cardAlready.setBuyer(card.getBuyer());
+				cardAlready.setBoughtDate(card.getBoughtDate());
+				cardAlready.setCardType(card.getCardType());
+				cardAlready.setDescription(card.getDescription());
+				cardAlready.setRemark(card.getRemark());
+				DaoHelper.doUpdate(cardDao, cardAlready);
 			}
-			DaoHelper.insert(cardDao, card);
+
 		}
 	}
 
