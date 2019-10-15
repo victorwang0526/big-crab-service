@@ -15,9 +15,7 @@ import com.victor.wang.bigCrab.sharedObject.PaginatedAPIResult;
 import com.victor.wang.bigCrab.util.dao.UniqueString;
 import jersey.repackaged.com.google.common.collect.Lists;
 import ma.glasnost.orika.MapperFacade;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
@@ -86,13 +84,13 @@ public class CardResource
 						}
 						Card card = new Card();
 						card.setId(UniqueString.uuidUniqueString());
-						card.setBuyer(r.getCell(0).getStringCellValue());
-						card.setBoughtDate(r.getCell(1).getStringCellValue());
-						card.setCardNumber(r.getCell(2).getStringCellValue().replace("NO.", ""));
-						card.setPassword(r.getCell(3).getStringCellValue());
-						card.setCardType(r.getCell(4).getStringCellValue());
-						card.setDescription(r.getCell(5).getStringCellValue());
-						card.setRemark(r.getCell(6).getStringCellValue());
+						card.setBuyer(getStringFromCell(r.getCell(0)));
+						card.setBoughtDate(getStringFromCell(r.getCell(1)));
+						card.setCardNumber(getStringFromCell(r.getCell(2)).replace("NO.", ""));
+						card.setPassword(getStringFromCell(r.getCell(3)));
+						card.setCardType(getStringFromCell(r.getCell(4)));
+						card.setDescription(getStringFromCell(r.getCell(5)));
+						card.setRemark(getStringFromCell(r.getCell(6)));
 						card.setStatus(CardStatus.UNUSED);
 						cards.add(card);
 					}
@@ -105,6 +103,19 @@ public class CardResource
 			}
 		}
 	}
+
+	private String getStringFromCell(Cell cell) {
+	    if(cell.getCellTypeEnum() == CellType.BLANK) {
+	        return "";
+        }
+	    if(cell.getCellTypeEnum() == CellType.NUMERIC) {
+	        return String.format("%.0f", cell.getNumericCellValue());
+        }
+	    if(cell.getCellTypeEnum() == CellType.STRING) {
+	        return cell.getStringCellValue();
+        }
+	    return "";
+    }
 
 	/**
 	 * <h3>Description</h3>.
