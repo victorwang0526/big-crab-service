@@ -1,6 +1,7 @@
 package com.victor.wang.bigCrab.util;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -13,13 +14,34 @@ import java.io.InputStream;
 public class XmlUtils
 {
 
+	public static String getValue(String xmlString, String nodeName) {
+		Document document = XmlUtils.stringTOXml(xmlString);
+		return XmlUtils.getValue(document, "OrderResponse", nodeName);
+	}
+
+
+	public static String getValue(String xmlString, String tagName, String nodeName) {
+		Document document = XmlUtils.stringTOXml(xmlString);
+		return XmlUtils.getValue(document, tagName, nodeName);
+	}
+
 	public static String getValue(Document document, String nodeName) {
-		NodeList booklist = document.getElementsByTagName("OrderResponse");
+		return XmlUtils.getValue(document, "OrderResponse", nodeName);
+	}
+
+	public static String getValue(Document document, String tagName, String nodeName) {
+		NodeList booklist = document.getElementsByTagName(tagName);
 		if(booklist == null || booklist.getLength() == 0){
 			return null;
 		}
-		return booklist.item(0).getAttributes().getNamedItem(nodeName).getNodeValue();
+		Node node = booklist.item(0).getAttributes().getNamedItem(nodeName);
+		if(node == null) {
+			return null;
+		}
+		return node.getNodeValue();
 	}
+
+
 
 
 	public static String getValue(String tagName, Document document, String nodeName) {

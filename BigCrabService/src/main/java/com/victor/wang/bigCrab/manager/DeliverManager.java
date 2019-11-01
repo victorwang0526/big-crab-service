@@ -414,8 +414,8 @@ public class DeliverManager {
             dto.setDeliverName(this.deliverName);
             dto.setDeliverMobile(this.deliverMobile);
 //		dto.setDeliverShipperCode("310000"); //寄件人邮政编码（国际件必传）
-            dto.setDestCode(CityCodeUtil.CITY_CODE.get(deliver.getdProvince() + '-' + deliver.getdCity()));//目的地代码 参考顺丰地区编号
-            dto.setZipCode(CityCodeUtil.CITY_CODE.get(this.deliverProvince + '-' + this.deliverCity));//原寄地代码 参考顺丰地区编号
+            dto.setDestCode(XmlUtils.getValue(deliver.getSfResponse(), "destcode"));//目的地代码 参考顺丰地区编号
+            dto.setZipCode(XmlUtils.getValue(deliver.getSfResponse(), "origincode"));//原寄地代码 参考顺丰地区编号
             //快递类型
             //1 ：标准快递   2.顺丰特惠   3： 电商特惠   5：顺丰次晨  6：顺丰即日  7.电商速配   15：生鲜速配
             dto.setExpressType(this.expressType);
@@ -429,14 +429,14 @@ public class DeliverManager {
             RlsInfoDto rlsMain = new RlsInfoDto();
             //主面单号
             rlsMain.setWaybillNo(dto.getMailNo());
-            rlsMain.setDestRouteLabel("755WE-571A3");
+            rlsMain.setDestRouteLabel(XmlUtils.getValue(deliver.getSfResponse(), "rls_detail", "destRouteLabel"));
             rlsMain.setPrintIcon("01000000");
             rlsMain.setProCode("T4");
 		rlsMain.setAbFlag("A");
-//		rlsMain.setXbFlag("XB");
-//		rlsMain.setCodingMapping("F33");
+		rlsMain.setXbFlag(XmlUtils.getValue(deliver.getSfResponse(), "rls_detail", "xbFlag"));
+		rlsMain.setCodingMapping(XmlUtils.getValue(deliver.getSfResponse(), "rls_detail", "codingMapping"));
 //		rlsMain.setCodingMappingOut("1A");
-//		rlsMain.setDestTeamCode("012345678");
+		rlsMain.setDestTeamCode(XmlUtils.getValue(deliver.getSfResponse(), "rls_detail", "destTeamCode"));
 //		rlsMain.setSourceTransferCode("021WTF");
             //对应下订单设置路由标签返回字段twoDimensionCode 该参
             rlsMain.setQRCode(deliver.getTwoDimensionCode());
